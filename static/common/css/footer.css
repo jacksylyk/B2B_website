@@ -1,0 +1,44 @@
+footer{
+    background: var(--Cuman-dark-green, #285F38);
+    color: var(--Light-grey, #D9D9D9);
+}
+footer > .container {
+    padding: 3rem 5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+footer .head{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+footer > .container > .body{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+footer > .container > .body > .contacts{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+footer > .container > .body > .nav{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    max-width: 10rem;
+}
+
+footer > .container > .body > .copyright-text{
+    max-width: 19.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+footer > .container > .body > .copyright-text >  div {
+    text-align: end;
+}

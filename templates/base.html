@@ -1,0 +1,81 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Home</title>
+    <link rel="stylesheet" href="{% static '/common/css/base.css' %}">
+    <link rel="stylesheet" href="{% static '/common/css/footer.css' %}">
+    <link rel="stylesheet" href="{% static '/common/css/nav.css' %}">
+</head>
+<body>
+<nav>
+    <div class="container">
+        <div class="logo">
+            <img src="{% static 'common/images/logo_nav.svg'%}" alt="logo navbar">
+        </div>
+        <div class="menu">
+            <a href="{% url 'store:index' %}"><div class="element">Главная</div></a>
+            <div class="element">Мои заказы</div>
+            <div class="element">F.A.Q</div>
+            <div class="element">Контакты</div>
+        </div>
+        <div class="utils">
+            <div class="languages">
+                <div>ҚАЗ</div>
+                <div>РУС</div>
+            </div>
+            <div class="cart">
+                <img src="{% static 'common/images/basket.svg'%}" alt="ico cart">
+            </div>
+            <div class="user">
+                <img src="{% static 'common/images/user.svg'%}" alt="ico user">
+                <div class="user">{{ user }}</div>
+            </div>
+        </div>
+    </div>
+</nav>
+{% block content %}
+{% endblock %}
+<footer>
+    <div class="container">
+        <div class="head">
+            <div class="logo">
+                <img src="{% static 'common/images/logo_footer.svg'%}" alt="logo footer">
+            </div>
+            <div class="copyright">
+                ВСЕ ПРАВА ЗАЩИЩЕНЫ
+            </div>
+        </div>
+        <div class="body">
+            <div class="contacts">
+                <div class="contact">
+                    <div class="element">+7 7172 123 456</div>
+                    <div class="element">cuman@cuman.kz</div>
+                </div>
+                <div class="address">
+                    <div class="city">г.Нур-Султан,</div>
+                    <div class="street">ул. Аль-Фараби 87/1</div>
+                    <div class="time">с 9:00 до 17:30</div>
+                </div>
+            </div>
+            <div class="nav">
+                <div class="element">Главная</div>
+                <div class="element">Мои заказы</div>
+                <div class="element">F.A.Q</div>
+            </div>
+            <div class="copyright-text">
+                <div class="body">
+                    Cuman сохраняет все авторские права на любой текст, графические изображения и программное обеспечение, принадлежащее компании
+                </div>
+                <div class="footer">
+                    © Cuman, 2022
+                </div>
+            </div>
+        </div>
+
+    </div>
+</footer>
+</body>
+</html>

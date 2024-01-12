@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container">
+        <h1>Register</h1>
+        <hr>
+        <form action="{% url 'company_register' %}" method="post">
+            {{ form }}
+            {% csrf_token %}
+            <button type="submit">Register</button>
+        </form>
+        <form action="{% url 'registration_cancel' %}" method="post">
+            {% csrf_token %}
+            <button type="submit">Cancel</button>
+        </form>
+    </div>
+
+{% endblock %}

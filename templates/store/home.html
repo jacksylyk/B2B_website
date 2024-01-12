@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class="container">
+        <h1>HomePage</h1>
+        {{ message }}
+        {% if user.is_authenticated %}
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">Login</a> | <a href="{% url 'register' %}">Register</a>
+        {% endif %}
+        <div class="container">
+            {% for product in products %}
+                <div class="product">
+                    {{ product }}
+                </div>
+                {% if user.is_authenticated %}
+                    <form action="{% url 'store:add_to_cart' product.id %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit">Add to Cart</button>
+                    </form>
+                {% endif %}
+            {% endfor %}
+        </div>
+        {% if user.is_authenticated %}
+            {% with user_cart=user.cart %}
+                <a href="{% url 'store:cart_detail' cart_id=user_cart.id %}">View Cart</a>
+            {% endwith %}
+        {% endif %}
+    </div>
+{% endblock %}
