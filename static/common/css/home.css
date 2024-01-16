@@ -1,0 +1,23 @@
+*{
+    border: 1px solid red;
+}
+.home{
+    display: flex;
+    width: 100%;
+}
+
+.side{
+    width: calc(28.3125rem - 9.5rem);
+    /*width: 28.3125rem;*/
+    padding: 3rem 4.75rem;
+}
+
+.side > .categories {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.base{
+    width: 61.4rem;
+}

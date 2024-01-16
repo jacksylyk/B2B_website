@@ -1,17 +1,28 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock title %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static '/common/css/home.css' %}">
+{% endblock styles %}
 {% block content %}
-    <div class="container">
-        <h1>HomePage</h1>
-        {{ message }}
-        {% if user.is_authenticated %}
-            <form method="post" action="{% url 'logout' %}">
-                {% csrf_token %}
-                <button type="submit">Logout</button>
-            </form>
-        {% else %}
-            <a href="{% url 'login' %}">Login</a> | <a href="{% url 'register' %}">Register</a>
-        {% endif %}
-        <div class="container">
+    <div class="container home">
+        <div class="side">
+            <div class="categories">
+                {% for category in categories %}
+                        <a href="{% url 'store:category_detail' category.id %}"> <div class="category">{{ category.name }}</div></a>
+                {% endfor %}
+            </div>
+            <div class="filters">
+                <div class="title">Фильтр</div>
+                <div class="filter">
+                    <div class="title">Бренд</div>
+                    <div class="element">Spectra</div>
+                    <div class="element">Arman</div>
+                </div>
+            </div>
+        </div>
+        <div class="base">
+            <div class="title"></div>
             {% for product in products %}
                 <div class="product">
                     {{ product }}
@@ -24,10 +35,6 @@
                 {% endif %}
             {% endfor %}
         </div>
-        {% if user.is_authenticated %}
-            {% with user_cart=user.cart %}
-                <a href="{% url 'store:cart_detail' cart_id=user_cart.id %}">View Cart</a>
-            {% endwith %}
-        {% endif %}
+        
     </div>
 {% endblock %}

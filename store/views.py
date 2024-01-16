@@ -6,9 +6,16 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 
-def index(request):
-    products = Product.objects.all()
-    return render(request, 'store/home.html', {'products': products})
+def category_detail(request, category_id=None):
+    default_category_id = 1
+    if category_id is None:
+        category_id = default_category_id
+
+    category = get_object_or_404(Category, id=category_id)
+    products = Product.objects.filter(category=category)
+    categories = Category.objects.all()
+
+    return render(request, 'store/home.html', {'category': category, 'products': products, 'categories': categories})
 
 
 @login_required

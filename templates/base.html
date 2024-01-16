@@ -4,19 +4,22 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Home</title>
+    <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static '/common/css/base.css' %}">
     <link rel="stylesheet" href="{% static '/common/css/footer.css' %}">
     <link rel="stylesheet" href="{% static '/common/css/nav.css' %}">
+    {% block styles %}{% endblock %}
 </head>
 <body>
 <nav>
     <div class="container">
         <div class="logo">
-            <img src="{% static 'common/images/logo_nav.svg'%}" alt="logo navbar">
+            <img src="{% static 'common/images/logo_nav.svg' %}" alt="logo navbar">
         </div>
         <div class="menu">
-            <a href="{% url 'store:index' %}"><div class="element">Главная</div></a>
+            <a href="{% url 'store:index' %}">
+                <div class="element">Главная</div>
+            </a>
             <div class="element">Мои заказы</div>
             <div class="element">F.A.Q</div>
             <div class="element">Контакты</div>
@@ -27,11 +30,24 @@
                 <div>РУС</div>
             </div>
             <div class="cart">
-                <img src="{% static 'common/images/basket.svg'%}" alt="ico cart">
+                {% if user.is_authenticated %}
+                    {% with user_cart=user.cart %}
+                        <a href="{% url 'store:cart_detail' cart_id=user_cart.id %}"><img src="{% static 'common/images/basket.svg' %}" alt="ico cart"></a>
+                    {% endwith %}
+                {% endif %}
+                
             </div>
             <div class="user">
-                <img src="{% static 'common/images/user.svg'%}" alt="ico user">
+                <img src="{% static 'common/images/user.svg' %}" alt="ico user">
                 <div class="user">{{ user }}</div>
+                {% if user.is_authenticated %}
+                    <form method="post" action="{% url 'logout' %}">
+                        {% csrf_token %}
+                        <button type="submit">Logout</button>
+                    </form>
+                {% else %}
+                    <a href="{% url 'login' %}">Login</a> | <a href="{% url 'register' %}">Register</a>
+                {% endif %}
             </div>
         </div>
     </div>
@@ -42,7 +58,7 @@
     <div class="container">
         <div class="head">
             <div class="logo">
-                <img src="{% static 'common/images/logo_footer.svg'%}" alt="logo footer">
+                <img src="{% static 'common/images/logo_footer.svg' %}" alt="logo footer">
             </div>
             <div class="copyright">
                 ВСЕ ПРАВА ЗАЩИЩЕНЫ
@@ -67,7 +83,8 @@
             </div>
             <div class="copyright-text">
                 <div class="body">
-                    Cuman сохраняет все авторские права на любой текст, графические изображения и программное обеспечение, принадлежащее компании
+                    Cuman сохраняет все авторские права на любой текст, графические изображения и программное
+                    обеспечение, принадлежащее компании
                 </div>
                 <div class="footer">
                     © Cuman, 2022
