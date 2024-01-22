@@ -1,20 +1,78 @@
-{% extends 'base.html' %}
-{% block content %}
-    <div class="container">
-        <h1>Login</h1>
-        <hr>
-
-        {% if form.errors %}
-            <p>{{ form.errors.error }}</p>
-        {% endif %}
-
-        <form action="{% url 'login' %}" method="post">
-        {{ form }}
-        {% csrf_token %}
-        <button type="submit">Login</button>
-
-        </form>
-        <a href="{% url 'password_reset' %}">Forgot Password</a>
+{% load static %}
+{#        <h1>Login</h1>#}
+{#        <hr>#}
+{##}
+{#        {% if form.errors %}#}
+{#            <p>{{ form.errors.error }}</p>#}
+{#        {% endif %}#}
+{##}
+{#        <form action="{% url 'login' %}" method="post">#}
+{#        {{ form }}#}
+{#        {% csrf_token %}#}
+{#        <button type="submit">Login</button>#}
+{##}
+{#        </form>#}
+{#        <a href="{% url 'password_reset' %}">Forgot Password</a>#}
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Авторизация</title>
+    <link rel="stylesheet" href="{% static '/common/css/login.css' %}">
+</head>
+<body>
+<div class="container">
+    <div class="side-info">
+        <div class="logo"><img src="{% static 'common/images/logo_footer.svg' %}" alt="logo footer"></div>
+        <div class="info-text">
+            <div class="title">ИНТЕРНЕТ ПОРТАЛ ДЛЯ БИЗНЕСА</div>
+            <div class="text">Для удобства заказа и отслеживания остатков и цен а так же, активная маркетинговая
+                политика нацеленная на конечного потребителя
+            </div>
+        </div>
+        <div class="back-link"><a href="{% url 'store:index' %}">Вернуться</a></div>
     </div>
+    <div class="main">
+        <div class="content">
+            <div class="text">
+                <div class="title">Авторизация</div>
+                <div class="text">Для перехода на портал, пожалуйста, пройдите авторизацию</div>
+                <div class="form">
+                    <form action="{% url 'login' %}" method="post" class="form-control">
+                        {% csrf_token %}
+                        <div class="email-field input-box">
+                            <label for="email">Email</label>
+                            <img class="input-logo" src="{% static 'common/images/email.svg' %}" alt="email">
+                            <input id="email" type="email" name="username" required>
+                        </div>
+                        <div class="password-field input-box">
+                            <label for="password">Password</label>
+                            <img class="input-logo" src="{% static 'common/images/password.svg' %}" alt="password">
+                            <input id="password" type="password" name="password" required>
+                        </div>
 
-{% endblock %}
+                        <div class="options">
+                            <div class="remember"><input type="checkbox"> Запомнить меня</div>
+                            <div class="forget"><a href="{% url 'password_reset' %}">Забыли пароль?</a></div>
+                        </div>
+
+                        <button type="submit">Войти</button>
+                    </form>
+                    <div class="register-link">У вас ещё нет аккаунта? <a
+                            href="{% url 'register' %}">Зарегистрируйтесь</a></div>
+                </div>
+
+            </div>
+        </div>
+        <div class="copyright">
+            СОГЛАШЕНИЕ ОБ ИСПОЛЬЗОВАНИИ МАТЕРИАЛОВ
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

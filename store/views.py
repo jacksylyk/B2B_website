@@ -1,9 +1,16 @@
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.generic import DetailView
 
 from .forms import CartItemForm
 from .models import Category, Product, Cart, CartItem
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+
+
+class ProductDetailView(DetailView):
+    model = Product
+    template_name = 'store/product_detail.html'
+    context_object_name = 'product'
 
 
 def category_detail(request, category_id=None):

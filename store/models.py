@@ -24,7 +24,8 @@ class Product(models.Model):
     description = models.TextField(blank=True)
     image = models.ImageField(upload_to='images/')
     slug = models.SlugField(max_length=255)
-    price = models.IntegerField()
+    price = models.IntegerField(default=0, blank=True)
+    quantity = models.PositiveIntegerField()
     in_stock = models.BooleanField(default=True)
     is_active = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
@@ -38,10 +39,18 @@ class Product(models.Model):
         return self.name
 
 
-class Cart(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='cart', on_delete=models.CASCADE, unique=False, primary_key=False)
-    products = models.ManyToManyField(max_length=255, related_name='all_products', blank=True, to='Product', through='CartItem')
+class Characteristic(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    name = models.CharField(max_length=255, verbose_name="Название характеристики")
+    value = models.CharField(max_length=255, verbose_name="Значение характеристики")
+    is_filter = models.BooleanField(default=False, verbose_name="Статус для фильтрации")
 
+
+class Cart(models.Model):
+    user = models.OneToOneField(settings.AUTH_USER_MODEL, related_name='cart', on_delete=models.CASCADE, unique=False,
+                                primary_key=False)
+    products = models.ManyToManyField(max_length=255, related_name='all_products', blank=True, to='Product',
+                                      through='CartItem')
 
     def __str__(self):
         return f"{self.user.name}'s cart"
@@ -57,5 +66,3 @@ class CartItem(models.Model):
 
     def __str__(self):
         return f'{self.quantity} x {self.product}'
-
-

@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Home{% endblock title %}
+{% block styles %}
+{#    <link rel="stylesheet" href="{% static '/common/css/home.css' %}">#}
+{% endblock styles %}
+{% block content %}
+    <div class="container">
+        <h1>{{ product }}</h1>
+        <h3>Характеристики</h3>
+        {% for char in product.characteristic_set.all %}
+            <h5>{{ char.name }}  --- {{ char.value }}</h5>
+        {% endfor %}
+    </div>
+
+{% endblock content %}

@@ -1,0 +1,199 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Open Sans", sans-serif;
+    background: var(--BG, #F6F6F6);
+}
+
+a, a:visited, a:hover, a:active {
+    color: inherit;
+    text-decoration: none;
+}
+
+.container {
+    display: flex;
+    height: 100svh;
+    margin: 0 5rem;
+}
+
+.side-info {
+    background: #285F38;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: white;
+    width: 30%;
+    padding: 5rem 0 6rem 3.5rem;
+}
+
+.side-info > .info-text {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.side-info > .info-text > .title {
+    font-size: 2.25rem;
+    font-weight: 700;
+}
+
+.side-info > .info-text > .text {
+    font-size: 1.5rem;
+    font-weight: 400;
+}
+
+.main{
+    width: 70%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+.main > .content{
+    width: 33rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.main > .content > .text > *{
+    text-align: left;
+}
+.main > .content > .text > .title{
+    color: var(--Cuman-dark-green, #285F38);
+    font-family: "Open Sans";
+    font-size: 2rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin-bottom: 0.75rem;
+}
+
+.main > .content > .text > .text{
+    color: var(--Grey, #9A9A9A);
+    font-family: "Open Sans";
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.main > .content > .text > .form{
+    padding-top: 3rem;
+}
+
+.form-control{
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+}
+
+.form-control > .input-box{
+    position: relative;
+}
+.form-control > .input-box > input{
+    outline: none;
+    border-radius: 0.25rem;
+    border: 1px solid #D9D9D9;
+    width: calc(100% - 6rem);
+    height: 3rem;
+    background: var(--BG, #F6F6F6);
+    font-size: 1rem;
+    padding: 0 3rem;
+    font-family: "Open Sans", sans-serif;
+    color: var(--Grey, #9A9A9A);
+}
+
+.form-control > .input-box > label{
+    position: absolute;
+    background: var(--BG, #F6F6F6);
+    top: -7px;
+    left: 10px;
+    color: #9A9A9A;
+    font-family: "Open Sans";
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 1rem; /* 133.333% */
+    letter-spacing: 0.03125rem;
+}
+.form-control > .input-box > .input-logo{
+    position: absolute;
+    top: 15px;
+    left: 15px;
+}
+.form-control > .options{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+}
+.form-control > .options > .remember{
+    color: #9A9A9A;
+    font-family: "Open Sans";
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.form-control > .options > .forget{
+    color: var(--Cuman-dark-green, #285F38);
+    font-family: "Open Sans";
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: normal;
+}
+
+.form-control > button{
+    width: 100%;
+    height: 3.5rem;
+    padding: 1rem;
+    border: none;
+    border-radius: 0.25rem;
+    background: var(--Cuman-dark-green, #285F38);
+    color: #FFF;
+    text-align: center;
+    font-family: "Open Sans";
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1.25rem;
+}
+
+.form > .register-link{
+    margin-top: 2.25rem;
+    color: var(--Grey, #9A9A9A);
+    text-align: center;
+    font-family: "Open Sans";
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.form > .register-link > a{
+    color: var(--Cuman-dark-green, #285F38);
+}
+
+.main > .copyright{
+    color: var(--Grey, #9A9A9A);
+    font-family: "Open Sans";
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  -webkit-background-clip: text;
+  transition: background-color 5000s ease-in-out 0s;
+  box-shadow: inset 0 0 20px 20px #FFFFFF;
+}
+

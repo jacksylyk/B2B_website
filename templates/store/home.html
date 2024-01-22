@@ -22,18 +22,39 @@
             </div>
         </div>
         <div class="base">
-            <div class="title"></div>
-            {% for product in products %}
-                <div class="product">
-                    {{ product }}
+            <div class="head">
+                <div class="title">{{ category }}</div>
+                <div class="input"></div>
+            </div>
+            <div class="status">
+                <div class="buttons">
+                    <div class="button active">Все</div>
+                    <div class="button">Товары со склада</div>
+                    <div class="button">На заказ</div>
                 </div>
-                {% if user.is_authenticated %}
-                    <form action="{% url 'store:add_to_cart' product.id %}" method="post">
-                        {% csrf_token %}
-                        <button type="submit">Add to Cart</button>
-                    </form>
-                {% endif %}
-            {% endfor %}
+                <div class="sort">Сортировка</div>
+            </div>
+            <div class="products">
+                {% for product in products %}
+                    <div class="product">
+                        <div class="image"><img src="{{ product.image.url }}" alt=""></div>
+                        <div class="title"><a href="{% url 'store:product_detail' product.pk %}">{{ product }}</a></div>
+                        <div class="quantity">В наличии {{ product.quantity }} шт</div>
+                        <div class="footer">
+                            <div class="price">{{ product.price }} ₸ </div>
+                            {% if user.is_authenticated %}
+                                <form action="{% url 'store:add_to_cart' product.id %}" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" ><img src="{% static 'common/images/add2cart.svg' %}" alt="add to cart"></button>
+                                </form>
+                            {% endif %}
+                        </div>
+                        
+                    </div>
+
+                {% endfor %}
+            </div>
+
         </div>
         
     </div>
