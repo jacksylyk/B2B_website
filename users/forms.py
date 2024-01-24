@@ -35,14 +35,6 @@ class UserCreationForm(UserCreationForm):
 
 
 class CompanyCreationForm(ModelForm):
-    type_of_business = forms.ChoiceField(
-        choices=(
-            ('Ритейлер', 'Ритейлер'),
-            ('Дистрибьютор', 'Дистрибьютор'),
-            ('Оператор связи', 'Оператор связи'),
-        )
-    )
-
     class Meta:
         model = Company
         exclude = ['user']

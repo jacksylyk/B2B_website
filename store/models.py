@@ -53,7 +53,7 @@ class Cart(models.Model):
                                       through='CartItem')
 
     def __str__(self):
-        return f"{self.user.name}'s cart"
+        return f"{self.user}'s cart"
 
     def get_absolute_url(self):
         return reverse("store:cart_detail")

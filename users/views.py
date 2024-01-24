@@ -1,24 +1,22 @@
 from django.contrib.auth import authenticate, login, get_user_model, logout
 from django.http import HttpResponseRedirect
+from django.http.response import HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View, generic
 
 from users.forms import UserCreationForm, CompanyCreationForm
-from users.models import Company
+from users.models import Company, BusinessType
 
 
 class Register(View):
     template_name = 'registration/register.html'
 
     def get(self, request):
-        # Retrieve form data from session if available
         form_data = request.session.pop('registration_form_data', None)
         if form_data:
-            # If form data is available, use it to initialize the form
             form = UserCreationForm(data=form_data)
         else:
-            # Otherwise, create a new form
             form = UserCreationForm()
 
         context = {'form': form}
@@ -35,24 +33,35 @@ class Register(View):
             login(request, user)
             return redirect('company_register')
 
-        # Save the form data in the session
         request.session['registration_form_data'] = request.POST
 
         context = {'form': form}
         return render(request, self.template_name, context)
 
 
-class CompanyRegister(generic.CreateView):
-    template_name = "registration/company_register.html"
-    model = Company
-    form_class = CompanyCreationForm
+def company_register_view(request):
+    if request.method == 'POST':
+        legal_company_name = request.POST.get('legal_company_name')
+        field_of_activity = request.POST.get('field_of_activity')
+        business_type = request.POST.get('business_type')
+        bin_number = request.POST.get('bin_number')
+        bik_number = request.POST.get('bik_number')
+        bank_name = request.POST.get('bank_name')
+        iban_number = request.POST.get('iban_number')
+        legal_company_address = request.POST.get('legal_company_address')
 
-    def form_valid(self, form):
-        form.instance.user = self.request.user
-        return super().form_valid(form)
+        business_type = BusinessType.objects.get(business_name=business_type)
+        Company.objects.create(legal_company_name=legal_company_name, field_of_activity=field_of_activity,
+                               type_of_business=business_type, bin_number=bin_number, bank_name=bank_name,
+                               iban_number=iban_number, bik_number=bik_number,
+                               legal_company_address=legal_company_address, user=request.user)
+        return redirect('registration_finish')
 
-    def get_success_url(self):
-        return reverse_lazy('store:index')
+    context = {
+        'business_types': BusinessType.objects.all(),
+    }
+
+    return render(request, 'registration/company_register.html', context)
 
 
 def registration_cancel(request):
@@ -68,3 +77,7 @@ def registration_cancel(request):
         request.session['registration_form_data'] = request.POST
 
     return redirect('register')
+
+
+def registration_finish(request):
+    return render(request, 'registration/register_finish.html')

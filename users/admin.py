@@ -3,7 +3,7 @@ from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
-from users.models import Company
+from users.models import Company, BusinessType
 
 User = get_user_model()
 
@@ -11,7 +11,7 @@ User = get_user_model()
 @admin.register(User)
 class UserAdmin(UserAdmin, admin.ModelAdmin):
     ordering = ['id']
-    list_display = ['email', 'first_name', 'last_name', 'phone','company_info']
+    list_display = ['email', 'first_name', 'last_name', 'phone', 'company_info']
     search_fields = ['email', 'first_name', 'last_name', 'phone']
 
     def company_info(self, obj):
@@ -76,4 +76,12 @@ class CompanyAdmin(admin.ModelAdmin):
     ]
     search_fields = [
         'legal_company_name',
+    ]
+
+
+@admin.register(BusinessType)
+class BusinessTypeAdmin(admin.ModelAdmin):
+    list_display = [
+        'business_name',
+        'description',
     ]

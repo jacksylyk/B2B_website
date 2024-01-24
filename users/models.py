@@ -28,7 +28,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 class Company(models.Model):
     legal_company_name = models.CharField(max_length=256, verbose_name='Юридическое наименование')
     field_of_activity = models.CharField(max_length=128, verbose_name='Сфера деятельности')
-    type_of_business = models.CharField(max_length=128, verbose_name="Тип бизнеса")
+    type_of_business = models.ForeignKey('BusinessType', on_delete=models.CASCADE, verbose_name='Тип бизнеса',
+                                         related_name='company_types')
     bin_number = models.CharField(max_length=12, verbose_name="БИН")
     bik_number = models.CharField(max_length=10, verbose_name="БИК")
     bank_name = models.CharField(max_length=128, verbose_name="Банк")
@@ -43,3 +44,14 @@ class Company(models.Model):
 
     class Meta:
         verbose_name_plural = 'Данные компании'
+
+
+class BusinessType(models.Model):
+    business_name = models.CharField(max_length=255, verbose_name="Бизнес")
+    description = models.TextField(verbose_name="Описание")
+
+    def __str__(self):
+        return self.business_name
+
+    class Meta:
+        verbose_name_plural = 'Типы бизнеса'

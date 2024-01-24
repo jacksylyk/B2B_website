@@ -1,0 +1,44 @@
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="{% static '/common/css/register_finish.css' %}">
+</head>
+<body>
+<div class="container">
+    <div class="head">
+        <div class="logo"><img src="{% static 'common/images/logo_nav.svg' %}" alt="Logo"></div>
+        <div class="steps">
+            <div class="step">
+                <div class="ico active">1</div>
+                <div class="text">О вас</div>
+            </div>
+            <div><img src="{% static 'common/images/line.svg' %}" alt=""></div>
+            <div class="step">
+                <div class="ico active">2</div>
+                <div class="text">О компании</div>
+            </div>
+            <div><img src="{% static 'common/images/line.svg' %}" alt=""></div>
+            <div class="step">
+                <div class="ico active">3</div>
+                <div class="text">Завершение</div>
+            </div>
+        </div>
+    </div>
+    <div class="main">
+        <div class="text">
+            <div class="title">Вы прошли регистрацию</div>
+            <div class="text">После обработки данных наш менеджер свяжется с Вами</div>
+            <div class="button"><a href="{% url 'login' %}"><button>Авторизация</button></a></div>
+        </div>
+        <div class="image"><img src="{% static 'common/images/finish.png' %}" alt="manager image"></div>
+    </div>
+
+</div>
+</body>
+</html>

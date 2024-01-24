@@ -1,13 +1,97 @@
-{% extends 'base.html' %}
-{% block content %}
-    <div class="container">
-        <h1>Register</h1>
-        <hr>
-        <form action="{% url 'register' %}" method="post">
-            {{ form }}
-            {% csrf_token %}
-            <button type="submit">Register</button>
-        </form>
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="{% static '/common/css/register.css' %}">
+</head>
+<body>
+<div class="container">
+    <div class="head">
+        <div class="logo"><img src="{% static 'common/images/logo_nav.svg' %}" alt="Logo"></div>
+        <div class="steps">
+            <div class="step">
+                <div class="ico active">1</div>
+                <div class="text">О вас</div>
+            </div>
+            <div><img src="{% static 'common/images/line.svg' %}" alt=""></div>
+            <div class="step">
+                <div class="ico">2</div>
+                <div class="text">О компании</div>
+            </div>
+            <div><img src="{% static 'common/images/line.svg' %}" alt=""></div>
+            <div class="step">
+                <div class="ico">3</div>
+                <div class="text">Завершение</div>
+            </div>
+        </div>
+    </div>
+    <div class="main">
+        <div class="title">О вас</div>
+        <div class="form-control">
+            <form action="{% url 'register' %}" method="post">
+                {% csrf_token %}
+                <div class="block-data personal">
+                    <div class="text">
+                        <div class="title">Персональные данные</div>
+                        <div class="text">Введите ваши данные</div>
+                    </div>
+                    <div class="fields">
+                        <div class="row">
+                            <div class="input-box">
+                                <label for="first-name">Имя</label>
+                                <input id="first-name" type="text" name="first_name" required autocomplete="off">
+                            </div>
+                            <div class="input-box">
+                                <label for="last-name">Фамилия</label>
+                                <input id="last-name" type="text" name="last_name" required autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="input-box">
+                            <label for="phone">Телефон</label>
+                            <input id="phone" type="tel" name="phone" required autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block-data">
+                    <div class="text">
+                        <div class="title">Данные для авторизации</div>
+                        <div class="text">Введите вашу почту и пароль</div>
+                    </div>
+                    <div class="fields">
+                        <div class="input-box">
+                            <label for="email">Email</label>
+                            <input id="email" type="email" name="email" required autocomplete="off">
+                        </div>
+                        <div class="row">
+                            <div class="input-box">
+                                <label for="password1">Пароль</label>
+                                <input id="password1" type="password" name="password1" required autocomplete="new-password">
+                            </div>
+                            <div class="input-box">
+                                <label for="password2">Подтверждение пароля</label>
+                                <input id="password2" type="password" name="password2" required autocomplete="new-password">
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="block-buttons">
+                    <div class="alert">*Эти поля обязательны к заполнению</div>
+                    <div class="buttons">
+                        <button class="cancel-button">Вернуться</button>
+                        <button type="submit" class="submit-button">Сохранить и продолжить</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
-{% endblock %}
+</div>
+</body>
+</html>

@@ -1,0 +1,142 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Open Sans", sans-serif;
+    background: var(--BG, #F6F6F6);
+}
+
+a, a:visited, a:hover, a:active {
+    color: inherit;
+    text-decoration: none;
+}
+
+.container {
+    display: flex;
+    height: 100svh;
+    margin: 0 5rem;
+    flex-direction: column;
+}
+
+.container > .head {
+    display: flex;
+    flex-direction: row;
+    width: calc(100% - 16.5rem);
+    height: 4.5rem;
+    justify-content: space-between;
+    padding: 5rem 11.5rem 1rem 5rem;
+    border-bottom: 2px solid #7BAF21;
+}
+
+.container > .head > .steps {
+    display: flex;
+    gap: 2.25rem;
+}
+
+.container > .head > .steps > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container > .head > .steps > .step {
+    flex-direction: row;
+    gap: 0.5rem;
+}
+
+.container > .head > .steps > .step > .ico {
+    width: 2.125rem;
+    height: 2.125rem;
+    background-image: url('/static/common/images/circle.svg');
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--Dark-grey, #6C6C6C);
+    text-align: center;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.container > .head > .steps > .step > .ico.active {
+    background-image: url("/static/common/images/circle_green.svg") !important;
+    color: white !important;
+}
+
+.container > .head > .steps > .step > .text {
+    color: var(--Dark-grey, #6C6C6C);
+    text-align: center;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.container > .main {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding: 0 5rem;
+}
+
+.container > .main > .text{
+    width: 100%;
+    max-width: 32rem;
+}
+
+.container > .main > .text > .title {
+    color: var(--Text-Black, #3E3E3E);
+    font-family: "Open Sans";
+    font-size: 2.25rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    letter-spacing: 0.03125rem;
+}
+
+.container > .main > .text > .text {
+    color: var(--Text-Black, #3E3E3E);
+    font-family: "Open Sans";
+    font-size: 1.5rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    letter-spacing: 0.03125rem;
+}
+
+.main button {
+    display: flex;
+    width: 13.8125rem;
+    height: 3.25rem;
+    padding: 1rem 9.25rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.625rem;
+    flex-shrink: 0;
+    border-radius: 0.25rem;
+    background: #285F38;
+    border: none;
+    color: #FFF;
+    text-align: center;
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1.25rem; /* 142.857% */
+    margin-top: 6rem;
+    cursor: pointer;
+}
+
+.main .image{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+}
+.main > .image > img{
+    width: 50%;
+    height: auto;
+
+}

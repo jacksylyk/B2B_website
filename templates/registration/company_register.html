@@ -1,17 +1,167 @@
-{% extends 'base.html' %}
-{% block content %}
-    <div class="container">
-        <h1>Register</h1>
-        <hr>
-        <form action="{% url 'company_register' %}" method="post">
-            {{ form }}
+{% load static %}
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Регистрация</title>
+    <link rel="stylesheet" href="{% static '/common/css/company_register.css' %}">
+</head>
+<body>
+{#<div class="">#}
+{#    <form action="{% url 'company_register' %}" method="post">#}
+{#        {{ form }}#}
+{#    </form>#}
+{#</div>#}
+<div class="container">
+    <div class="head">
+        <div class="logo"><img src="{% static 'common/images/logo_nav.svg' %}" alt="Logo"></div>
+        <div class="steps">
+            <div class="step">
+                <div class="ico active">1</div>
+                <div class="text">О вас</div>
+            </div>
+            <div><img src="{% static 'common/images/line.svg' %}" alt=""></div>
+            <div class="step">
+                <div class="ico active">2</div>
+                <div class="text">О компании</div>
+            </div>
+            <div><img src="{% static 'common/images/line.svg' %}" alt=""></div>
+            <div class="step">
+                <div class="ico">3</div>
+                <div class="text">Завершение</div>
+            </div>
+        </div>
+    </div>
+    <div class="main">
+        <div class="title">О компании</div>
+        <div class="form-control">
+            <form action="{% url 'company_register' %}" method="post">
             {% csrf_token %}
-            <button type="submit">Register</button>
-        </form>
-        <form action="{% url 'registration_cancel' %}" method="post">
-            {% csrf_token %}
-            <button type="submit">Cancel</button>
-        </form>
+                <div class="block-data personal">
+                    <div class="text">
+                        <div class="title">Данные компании</div>
+                        <div class="text">Введите информацию о компании</div>
+                    </div>
+                    <div class="fields">
+                        <div class="row">
+                            <div class="input-box">
+                                <label for="legal_company_name">Юридическое наименование</label>
+                                <input id="legal_company_name" type="text" name="legal_company_name" required
+                                       autocomplete="off">
+                            </div>
+                            <div class="input-box">
+                                <label for="field_of_activity">Сфера деятельности</label>
+                                <input id="field_of_activity" type="text" name="field_of_activity" required
+                                       autocomplete="off">
+                            </div>
+                        </div>
+                        <div class="input-box select-custom">
+                            <div class="select">
+                                <input type="hidden" id="selected_business_type" name="business_type" value="">
+                                <div class="select-header">
+                                    <div class="label">Тип бизнеса</div>
+                                    <div class="selected"></div>
+                                    <div class="ico"><img src="{% static 'common/images/arrow_down.svg' %}" alt="arrow">
+                                    </div>
+                                </div>
+                                <div class="select-body">
+                                    {% for option in business_types %}
+                                        <div class="option">
+                                            <div class="title">{{ option.business_name }}</div>
+                                            <div class="text">{{ option.description }}</div>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="block-data">
+                    <div class="text">
+                        <div class="title">Реквизиты</div>
+                        <div class="text">Введите ваши реквизиты</div>
+                    </div>
+                    <div class="fields">
+                        <div class="input-box">
+                            <label for="bin_number">БИН</label>
+                            <input id="bin_number" type="text" name="bin_number" required autocomplete="off">
+                        </div>
+                        <div class="input-box">
+                            <label for="bik_number">БИК</label>
+                            <input id="bik_number" type="text" name="bik_number" required autocomplete="new-password">
+                        </div>
+                        <div class="input-box">
+                            <label for="password2">Банк</label>
+                            <input id="password2" type="text" name="bank_name" required autocomplete="new-password">
+                        </div>
+                        <div class="input-box">
+                            <label for="iban_number">ИИК (номер счёта)</label>
+                            <input id="iban_number" type="text" name="iban_number" required autocomplete="new-password">
+                        </div>
+                        <div class="input-box">
+                            <label for="legal_company_address">Юридический адрес</label>
+                            <input id="legal_company_address" type="text" name="legal_company_address" required
+                                   autocomplete="new-password">
+                        </div>
+
+
+                    </div>
+                </div>
+                <div class="block-buttons">
+                    <div class="alert">*Эти поля обязательны к заполнению</div>
+                    <div class="buttons">
+                        <button class="cancel-button">Вернуться</button>
+                        <button type="submit" class="submit-button">Сохранить и продолжить</button>
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 
-{% endblock %}
+</div>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var selectHeader = document.querySelector('.select-header');
+        var selectBody = document.querySelector('.select-body');
+        var selected = document.querySelector('.selected');
+        var hiddenInput = document.getElementById('selected_business_type');
+
+        selectHeader.addEventListener('click', function () {
+            selectBody.style.display = (selectBody.style.display === 'block') ? 'none' : 'block';
+        });
+
+        document.addEventListener('click', function (e) {
+            if (!selectHeader.contains(e.target)) {
+                selectBody.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.option').forEach(function (option) {
+            option.addEventListener('click', function () {
+                // Remove "active" class from all options
+                document.querySelectorAll('.option').forEach(function (opt) {
+                    opt.classList.remove('active');
+                });
+
+                // Add "active" class to the selected option
+                option.classList.add('active');
+
+                // Update the content of the "selected" div with only the title
+                selected.innerHTML = option.querySelector('.title').innerHTML;
+
+                // Update the hidden input field with the selected business type
+                hiddenInput.value = option.querySelector('.title').innerHTML;
+                console.log(hiddenInput.value);
+
+                // Hide the select body
+                selectBody.style.display = 'none';
+            });
+        });
+    });
+</script>
+</body>
+</html>

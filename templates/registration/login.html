@@ -1,18 +1,4 @@
 {% load static %}
-{#        <h1>Login</h1>#}
-{#        <hr>#}
-{##}
-{#        {% if form.errors %}#}
-{#            <p>{{ form.errors.error }}</p>#}
-{#        {% endif %}#}
-{##}
-{#        <form action="{% url 'login' %}" method="post">#}
-{#        {{ form }}#}
-{#        {% csrf_token %}#}
-{#        <button type="submit">Login</button>#}
-{##}
-{#        </form>#}
-{#        <a href="{% url 'password_reset' %}">Forgot Password</a>#}
 <!doctype html>
 <html lang="ru">
 <head>
@@ -46,7 +32,7 @@
                         <div class="email-field input-box">
                             <label for="email">Email</label>
                             <img class="input-logo" src="{% static 'common/images/email.svg' %}" alt="email">
-                            <input id="email" type="email" name="username" required>
+                            <input id="email" type="email" name="username" required autocomplete="off">
                         </div>
                         <div class="password-field input-box">
                             <label for="password">Password</label>

@@ -1,0 +1,324 @@
+/**{*/
+/*    border: 1px solid red;*/
+/*}*/
+body {
+    margin: 0;
+    padding: 0;
+    font-family: "Open Sans", sans-serif;
+    background: var(--BG, #F6F6F6);
+}
+
+a, a:visited, a:hover, a:active {
+    color: inherit;
+    text-decoration: none;
+}
+
+.container {
+    display: flex;
+    height: 100svh;
+    margin: 0 5rem;
+    flex-direction: column;
+}
+
+.container > .head {
+    display: flex;
+    flex-direction: row;
+    width: calc(100% - 16.5rem);
+    height: 4.5rem;
+    justify-content: space-between;
+    padding: 5rem 11.5rem 1rem 5rem;
+    border-bottom: 2px solid;
+    border-image: linear-gradient(to right, #7BAF21 66%, #D9D9D9 66%, #D9D9D9 100%) 1;
+}
+
+.container > .head > .steps {
+    display: flex;
+    gap: 2.25rem;
+}
+
+.container > .head > .steps > div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container > .head > .steps > .step {
+    flex-direction: row;
+    gap: 0.5rem;
+}
+
+.container > .head > .steps > .step > .ico {
+    width: 2.125rem;
+    height: 2.125rem;
+    background-image: url('/static/common/images/circle.svg');
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: var(--Dark-grey, #6C6C6C);
+    text-align: center;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+.container > .head > .steps > .step > .ico.active {
+    background-image: url("/static/common/images/circle_green.svg") !important;
+    color: white !important;
+}
+.container > .head > .steps > .step > .text {
+    color: var(--Dark-grey, #6C6C6C);
+    text-align: center;
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.container > .main {
+    padding: 3.25rem 11.75rem 5rem 6.81rem;
+}
+
+.container > .main > .title {
+    color: var(--Cuman-dark-green, #285F38);
+    font-family: "Open Sans";
+    font-size: 2.25rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.container > .main > .form-control .personal {
+    border-bottom: 1px solid #D9D9D9;
+}
+
+.container > .main > .form-control .block-data {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    gap: 5rem;
+    padding: 3.5rem 0;
+}
+
+.container > .main > .form-control .block-data > .text {
+    width: 100%;
+}
+
+.container > .main > .form-control .block-data > .fields {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 2.25rem;
+}
+
+.container > .main > .form-control .block-data > .fields > .row {
+    display: flex;
+    flex-direction: row;
+    gap: 1.25rem;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.container > .main > .form-control .block-data > .fields > .row > .input-box {
+    width: 100%;
+}
+
+.container > .main > .form-control .block-data > .text > .title {
+    color: var(--Dark-grey, #6C6C6C);
+    font-family: "Open Sans";
+    font-size: 1.5rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+}
+
+.container > .main > .form-control .block-data > .text > .text {
+    color: var(--Grey, #9A9A9A);
+    font-family: "Open Sans";
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.input-box {
+    position: relative;
+}
+
+.input-box > input {
+    outline: none;
+    border-radius: 0.25rem;
+    border: 1px solid #D9D9D9;
+    width: calc(100% - 2rem);
+    height: 3rem;
+    background: var(--BG, #F6F6F6);
+    font-size: 1rem;
+    padding: 0 1rem;
+    font-family: "Open Sans", sans-serif;
+    color: var(--Grey, #9A9A9A);
+}
+
+.input-box > label {
+    position: absolute;
+    background: var(--BG, #F6F6F6);
+    top: -7px;
+    left: 10px;
+    color: #9A9A9A;
+    font-family: "Open Sans";
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 1rem; /* 133.333% */
+    letter-spacing: 0.03125rem;
+}
+
+.container > .main > .form-control .block-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.container > .main > .form-control .block-buttons > .buttons {
+    display: flex;
+    gap: 1rem;
+    flex-direction: row;
+}
+
+.container > .main > .form-control .block-buttons > .buttons > .cancel-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+    gap: 0.625rem;
+    flex-shrink: 0;
+    border-radius: 0.25rem;
+    border: 1px solid var(--Light-grey, #D9D9D9);
+    background: inherit;
+    color: var(--Dark-grey, #9A9A9A);
+    text-align: center;
+    font-family: "Open Sans";
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1.25rem;
+    cursor: pointer;
+}
+
+.container > .main > .form-control .block-buttons > .buttons > .submit-button {
+    border-radius: 0.25rem;
+    background: #285F38;
+    border: none;
+    display: flex;
+    padding: 1rem;
+    justify-content: center;
+    align-items: center;
+    gap: 0.625rem;
+    flex-shrink: 0;
+    color: #FFF;
+    text-align: center;
+    font-family: "Open Sans";
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 1.25rem;
+    cursor: pointer;
+}
+
+.container > .main > .form-control .block-buttons > .alert {
+    color: var(--Grey, #9A9A9A);
+    font-family: "Open Sans";
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.input-box > .select {
+    width: 100%;
+}
+
+.input-box > .select > .select-header {
+    outline: none;
+    border-radius: 0.25rem;
+    border: 1px solid #D9D9D9;
+    width: calc(100% - 2rem);
+    height: 3rem;
+    background: var(--BG, #F6F6F6);
+    font-size: 1rem;
+    padding: 0 1rem;
+    font-family: "Open Sans", sans-serif;
+    color: var(--Grey, #9A9A9A);
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+
+.input-box > .select > .select-header > .label {
+    position: absolute;
+    background: var(--BG, #F6F6F6);
+    top: -7px;
+    left: 10px;
+    color: #9A9A9A;
+    font-family: "Open Sans";
+    font-size: 0.75rem;
+    font-style: normal;
+    font-weight: 600;
+    line-height: 1rem; /* 133.333% */
+    letter-spacing: 0.03125rem;
+}
+
+.input-box > .select > .select-header > .ico {
+    position: absolute;
+    right: 20px;
+    top: 15px;
+}
+
+.select-body {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    z-index: 9999;
+    border-radius: 0.25rem;
+    background: var(--White, #FFF);
+    box-shadow: 0px 4px 9px 3px rgba(0, 0, 0, 0.05);
+}
+
+.select-body > .option {
+    padding: 1rem;
+    cursor: pointer;
+}
+
+.select-body > .option.active {
+    background: var(--BG-GREY, #F6F6F6);
+}
+
+.select-body > .option.active > .title {
+    color: var(--Cuman-light-green, #7BAF21);
+}
+
+.select-body > .option > .title {
+    color: var(--Text-Black, #3E3E3E);
+    font-family: "Open Sans";
+    font-size: 1rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5rem; /* 150% */
+    letter-spacing: 0.03125rem;
+}
+
+.select-body > .option > .text {
+    color: var(--Dark-grey, #6C6C6C);
+    font-family: "Open Sans";
+    font-size: 0.875rem;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.5rem;
+    letter-spacing: 0.03125rem;
+}
+
+
+.select-body > .option:hover {
+    background: var(--BG-GREY, #F6F6F6);
+}
