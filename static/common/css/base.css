@@ -4,8 +4,13 @@
 body{
     padding: 0;
     margin: 0;
+    background: var(--BG, #F6F6F6);
 }
 .container{
     max-width: 1440px;
     margin: 0 auto;
+}
+a, a:visited, a:hover, a:active {
+    color: inherit;
+    text-decoration: none;
 }

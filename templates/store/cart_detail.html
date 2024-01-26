@@ -1,53 +1,150 @@
 {% extends "base.html" %}
-{% load cart_filters %}
+{% load cart_filters static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static '/common/css/cart_detail.css' %}">
+{% endblock styles %}
 {% block content %}
-    <div class="container">
-        {{ message }}
+    <div class="container cart-detail">
+        <div class="main">
+            <div class="title-block">
+                <div class="title">Корзина</div>
+                {% if cart_items %}
+                    <div class="clear-cart"><a href="{% url 'store:clear_cart' cart_id=cart_id %}">Очистить корзину</a></div>
+                {% endif %}
+            </div>
+            {% if cart_items %}
+                <div class="cart-items">
+                    {% for cart_item in cart_items %}
+                        <div class="cart-item">
+                            <div class="main">
+                                <div class="image">
+                                    <img src="{% static 'common/images/spectra_front.png' %}" alt="">
+                                </div>
+                                <div class="text">
+                                    <div class="name__description">
+                                        <div class="name">{{ cart_item.product.name }}</div>
+                                        <div class="description">{{ cart_item.product.description }}</div>
+                                    </div>
+                                    <div class="price-quantity">
+                                        <div class="price">{{ cart_item.product.price }} ₸</div>
+                                        <div class="quantity">
+                                            <form method="post" action="{% url 'store:update_cart' cart_item.id %}">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="quantity"
+                                                       value="{{ cart_item.quantity|default:0 }}">
+                                                <button type="submit" class="decrement btn" name="action" value="decrement"><img
+                                                        src="{% static 'common/images/minus.svg' %}"
+                                                        alt="minus" ></button>
+                                            </form>
+                                            <div class="quantity__count">
+                                                <div class="count">{{ cart_item.quantity }} шт</div>
+                                            </div>
+                                            <form method="post" action="{% url 'store:update_cart' cart_item.id %}">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="quantity"
+                                                       value="{{ cart_item.quantity|default:1 }}">
+                                                <button type="submit" class="increment btn" name="action" value="increment"><img
+                                                        src="{% static 'common/images/plus.svg' %}"
+                                                        alt="plus" >
+                                                </button>
+                                            </form>
+
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="status-delete">
+                                <div class="status">на заказ</div>
+                                <form method="post" action="{% url 'store:remove_from_cart' cart_item.id %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="remove">
+                                        <img src="{% static 'common/images/trash.svg' %}" alt="remove">
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="empty-cart">Ваша корзина пуста <p>Вы можете перейти на <a href="{% url 'store:index' %}" style="color: #7BAF21">главную страницу</a> </p></div>
+            {% endif %}
+        </div>
         {% if cart_items %}
-            <table border="1">
-                <thead>
-                <tr>
-                    <th>Product</th>
-                    <th>Price</th>
-                    <th>Quantity</th>
-                    <th>Total</th>
-                </tr>
-                </thead>
-                <tbody>
-                {% for item in cart_items %}
-                    <tr>
-                        <td>{{ item.product.name }}</td>
-                        <td>{{ item.product.price }} ₸</td>
-                        <td>
-                            <form method="post" action="{% url 'store:update_cart' item.id %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="quantity" value="{{ item.quantity|default:1 }}">
-                                <button type="submit" name="action" value="increment">+</button>
-                            </form>
-                            {{ item.quantity }}
-                            <form method="post" action="{% url 'store:update_cart' item.id %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="quantity" value="{{ item.quantity|default:0 }}">
-                                <button type="submit" name="action" value="decrement">-</button>
-                            </form>
-                        </td>
-                        <td>{{ item.product.price|multiply:item.quantity }} ₸</td>
-                        <td>
-                            <form method="post" action="{% url 'store:remove_from_cart' item.id %}">
-                                {% csrf_token %}
-                                <button type="submit">Remove</button>
-                            </form>
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
 
-            <p>Total: {{ cart_items|total_price }} ₸</p>
-
-        {% else %}
-            <p>Your cart is empty.</p>
-        {% endif %}
+            <div class="side">
+                <div class="search"><input type="text" placeholder="Поиск"></div>
+                <div class="delivery">
+                    <div class="title">Способ доставки</div>
+                    <div class="delivery_types">
+                        <div class="type">
+                            <div class="content">
+                                <div class="ico"><img src="{% static 'common/images/samovyvoz.svg' %}" alt=""></div>
+                                <div class="text">
+                                    <div class="title">Самовывоз (бесплатно)</div>
+                                    <div class="text">г.Нур-Султан, ул. Аль-Фараби 87/1</div>
+                                </div>
+                            </div>
+                            <div class="checkbox">
+                                <input type="checkbox" value="0">
+                            </div>
+                        </div>
+                        <div class="type">
+                            <div class="content">
+                                <div class="ico"><img src="{% static 'common/images/dostavka.svg' %}" alt=""></div>
+                                <div class="text">
+                                    <div class="title">Доставка</div>
+                                    <div class="text">Выберите адрес</div>
+                                </div>
+                            </div>
+                            <div class="checkbox">
+                                <input type="checkbox" value="0">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form">
+                        <div class="input-box">
+                            <label for="city">Город</label>
+                            <input id="city" type="text" name="first_name" required autocomplete="off">
+                        </div>
+                        <div class="input-box">
+                            <label for="street">Улица</label>
+                            <input id="street" type="text" name="first_name" required autocomplete="off">
+                        </div>
+                        <div class="input-box">
+                            <label for="house">Дом / Офис</label>
+                            <input id="house" type="text" name="first_name" required autocomplete="off">
+                        </div>
+                        <div class="input-box">
+                            <label for="number">Контактный номер</label>
+                            <input id="number" type="tel" name="first_name" required autocomplete="off">
+                        </div>
+                    </div>
+                </div>
+                <div class="result">
+                    <div class="title">Сумма к оплате</div>
+                    <div class="bill">
+                        <div class="group">
+                            <div class="price field">
+                                <div class="name">5 товаров на сумму</div>
+                                <div class="value">{{ cart_items | total_price }} ₸</div>
+                            </div>
+                            <div class="delivery-price field">
+                                <div class="name">Доставка</div>
+                                <div class="value">5 000 ₸</div>
+                            </div>
+                        </div>
+                        <div class="total-price">
+                            <div class="name">С учетом НДС</div>
+                            <div class="value">10 863 000 $</div>
+                        </div>
+                    </div>
+                    <div class="submit">
+                        <button>Оформить заказ</button>
+                    </div>
+                </div>
+            </div>
+        {% endif %} 
     </div>
 
 

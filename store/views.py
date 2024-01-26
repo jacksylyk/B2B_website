@@ -1,3 +1,4 @@
+from django.http.response import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import DetailView
 
@@ -50,7 +51,7 @@ def remove_from_cart(request, cart_item_id):
 def cart_detail(request, cart_id):
     cart = get_object_or_404(Cart, pk=cart_id)
     cart_items = cart.items.all()
-    return render(request, 'store/cart_detail.html', {'cart_items': cart_items})
+    return render(request, 'store/cart_detail.html', {'cart_items': cart_items, 'cart_id': cart_id})
 
 
 @login_required
@@ -71,6 +72,13 @@ def update_cart(request, item_id):
             cart_item.save()
 
     return redirect('store:cart_detail', cart_id=cart_item.cart.id)
+
+
+@login_required
+def clear_cart(request, cart_id):
+    cart = get_object_or_404(Cart, pk=cart_id)
+    cart.products.clear()
+    return redirect('store:cart_detail', cart_id=cart_id)
 
 
 def get_user_cart(user):
