@@ -181,10 +181,10 @@ a, a:visited, a:hover, a:active {
 .container > .main > .form-control .block-buttons > .buttons {
     display: flex;
     gap: 1rem;
-    flex-direction: row;
+    flex-direction: row-reverse;
 }
 
-.container > .main > .form-control .block-buttons > .buttons > .cancel-button {
+.container > .main > .form-control .block-buttons > .buttons .cancel-button {
     display: flex;
     justify-content: center;
     align-items: center;

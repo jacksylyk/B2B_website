@@ -1,4 +1,4 @@
-from django.http.response import HttpResponse
+from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import DetailView
 
@@ -28,11 +28,16 @@ def category_detail(request, category_id=None):
 
 @login_required
 def add_to_cart(request, product_id):
-    product = Product.objects.get(pk=product_id)
-    user_cart, created = Cart.objects.get_or_create(user=request.user)
-    cart_item, created = CartItem.objects.get_or_create(product=product, cart=user_cart)
-    cart_item.quantity += 1
-    cart_item.save()
+    if request.method == 'POST':
+        product = Product.objects.get(pk=product_id)
+        user_cart, created = Cart.objects.get_or_create(user=request.user)
+        cart_item, created = CartItem.objects.get_or_create(product=product, cart=user_cart)
+        cart_item.quantity += 1
+        cart_item.save()
+
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            return JsonResponse({'status': 'success', 'message': 'Product added to cart'})
+
     return redirect('store:index')
 
 
@@ -50,7 +55,7 @@ def remove_from_cart(request, cart_item_id):
 @login_required
 def cart_detail(request, cart_id):
     cart = get_object_or_404(Cart, pk=cart_id)
-    cart_items = cart.items.all()
+    cart_items = cart.items.all().order_by('product__name')
     return render(request, 'store/cart_detail.html', {'cart_items': cart_items, 'cart_id': cart_id})
 
 

@@ -10,11 +10,6 @@
     <link rel="stylesheet" href="{% static '/common/css/company_register.css' %}">
 </head>
 <body>
-{#<div class="">#}
-{#    <form action="{% url 'company_register' %}" method="post">#}
-{#        {{ form }}#}
-{#    </form>#}
-{#</div>#}
 <div class="container">
     <div class="head">
         <div class="logo"><img src="{% static 'common/images/logo_nav.svg' %}" alt="Logo"></div>
@@ -114,11 +109,16 @@
                 <div class="block-buttons">
                     <div class="alert">*Эти поля обязательны к заполнению</div>
                     <div class="buttons">
-                        <button class="cancel-button">Вернуться</button>
+                        
                         <button type="submit" class="submit-button">Сохранить и продолжить</button>
+            </form>
+                        <form action="{% url 'registration_cancel'%}" method="post">
+                            {% csrf_token %}
+                            <button class="cancel-button" type="submit">Вернуться</button>
+                        </form>
                     </div>
                 </div>
-            </form>
+
         </div>
     </div>
 

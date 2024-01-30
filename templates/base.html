@@ -38,15 +38,10 @@
                 
             </div>
             <div class="user">
-                <img src="{% static 'common/images/user.svg' %}" alt="ico user">
-                <div class="user">{{ user }}</div>
                 {% if user.is_authenticated %}
-                    <form method="post" action="{% url 'logout' %}">
-                        {% csrf_token %}
-                        <button type="submit">Logout</button>
-                    </form>
+                    <a href="{% url 'logout' %}" title="{{ user }}"><img src="{% static 'common/images/user.svg' %}" alt="{{ user }}" ></a>
                 {% else %}
-                    <a href="{% url 'login' %}">Login</a> | <a href="{% url 'register' %}">Register</a>
+                    <a href="{% url 'login' %}"><img src="{% static 'common/images/user.svg' %}" alt="ico user"></a>
                 {% endif %}
             </div>
         </div>

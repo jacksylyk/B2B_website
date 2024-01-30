@@ -44,16 +44,16 @@
                         <div class="row">
                             <div class="input-box">
                                 <label for="first-name">Имя</label>
-                                <input id="first-name" type="text" name="first_name" required autocomplete="off">
+                                <input id="first-name" type="text" name="first_name" required autocomplete="off" value="{{ first_name }}">
                             </div>
                             <div class="input-box">
                                 <label for="last-name">Фамилия</label>
-                                <input id="last-name" type="text" name="last_name" required autocomplete="off">
+                                <input id="last-name" type="text" name="last_name" required autocomplete="off" value="{{ last_name }}">
                             </div>
                         </div>
                         <div class="input-box">
                             <label for="phone">Телефон</label>
-                            <input id="phone" type="tel" name="phone" required autocomplete="off">
+                            <input id="phone" type="tel" name="phone" required autocomplete="off" value="{{ phone }}">
                         </div>
                     </div>
                 </div>
@@ -66,7 +66,7 @@
                     <div class="fields">
                         <div class="input-box">
                             <label for="email">Email</label>
-                            <input id="email" type="email" name="email" required autocomplete="off">
+                            <input id="email" type="email" name="email" required autocomplete="off" value="{{ email }}">
                         </div>
                         <div class="row">
                             <div class="input-box">
@@ -84,7 +84,7 @@
                 <div class="block-buttons">
                     <div class="alert">*Эти поля обязательны к заполнению</div>
                     <div class="buttons">
-                        <button class="cancel-button">Вернуться</button>
+                        <div class="cancel-button" onclick="location.href='{% url 'login' %}'" >Вернуться</div>
                         <button type="submit" class="submit-button">Сохранить и продолжить</button>
                     </div>
                 </div>

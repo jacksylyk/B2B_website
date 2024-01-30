@@ -3,13 +3,17 @@
 {% block styles %}
     <link rel="stylesheet" href="{% static '/common/css/cart_detail.css' %}">
 {% endblock styles %}
+{% block title %}
+    Корзина
+{% endblock title %}
 {% block content %}
     <div class="container cart-detail">
         <div class="main">
             <div class="title-block">
                 <div class="title">Корзина</div>
                 {% if cart_items %}
-                    <div class="clear-cart"><a href="{% url 'store:clear_cart' cart_id=cart_id %}">Очистить корзину</a></div>
+                    <div class="clear-cart"><a href="{% url 'store:clear_cart' cart_id=cart_id %}">Очистить корзину</a>
+                    </div>
                 {% endif %}
             </div>
             {% if cart_items %}
@@ -18,7 +22,7 @@
                         <div class="cart-item">
                             <div class="main">
                                 <div class="image">
-                                    <img src="{% static 'common/images/spectra_front.png' %}" alt="">
+                                    <img src="{{ cart_item.product.image.url }}" alt="">
                                 </div>
                                 <div class="text">
                                     <div class="name__description">
@@ -26,15 +30,16 @@
                                         <div class="description">{{ cart_item.product.description }}</div>
                                     </div>
                                     <div class="price-quantity">
-                                        <div class="price">{{ cart_item.product.price }} ₸</div>
+                                        <div class="price">{{ cart_item.product.price| price_filter }} ₸</div>
                                         <div class="quantity">
                                             <form method="post" action="{% url 'store:update_cart' cart_item.id %}">
                                                 {% csrf_token %}
                                                 <input type="hidden" name="quantity"
                                                        value="{{ cart_item.quantity|default:0 }}">
-                                                <button type="submit" class="decrement btn" name="action" value="decrement"><img
+                                                <button type="submit" class="decrement btn" name="action"
+                                                        value="decrement"><img
                                                         src="{% static 'common/images/minus.svg' %}"
-                                                        alt="minus" ></button>
+                                                        alt="minus"></button>
                                             </form>
                                             <div class="quantity__count">
                                                 <div class="count">{{ cart_item.quantity }} шт</div>
@@ -43,9 +48,10 @@
                                                 {% csrf_token %}
                                                 <input type="hidden" name="quantity"
                                                        value="{{ cart_item.quantity|default:1 }}">
-                                                <button type="submit" class="increment btn" name="action" value="increment"><img
+                                                <button type="submit" class="increment btn" name="action"
+                                                        value="increment"><img
                                                         src="{% static 'common/images/plus.svg' %}"
-                                                        alt="plus" >
+                                                        alt="plus">
                                                 </button>
                                             </form>
 
@@ -67,7 +73,9 @@
                     {% endfor %}
                 </div>
             {% else %}
-                <div class="empty-cart">Ваша корзина пуста <p>Вы можете перейти на <a href="{% url 'store:index' %}" style="color: #7BAF21">главную страницу</a> </p></div>
+                <div class="empty-cart">Ваша корзина пуста <p>Вы можете перейти на <a href="{% url 'store:index' %}"
+                                                                                      style="color: #7BAF21">главную
+                    страницу</a></p></div>
             {% endif %}
         </div>
         {% if cart_items %}
@@ -127,16 +135,16 @@
                         <div class="group">
                             <div class="price field">
                                 <div class="name">5 товаров на сумму</div>
-                                <div class="value">{{ cart_items | total_price }} ₸</div>
+                                <div class="value">{{ cart_items | total_price | price_filter}} ₸</div>
                             </div>
                             <div class="delivery-price field">
                                 <div class="name">Доставка</div>
-                                <div class="value">5 000 ₸</div>
+                                <div class="value">? ??? ₸</div>
                             </div>
                         </div>
                         <div class="total-price">
                             <div class="name">С учетом НДС</div>
-                            <div class="value">10 863 000 $</div>
+                            <div class="value">?? ??? ??? ₸</div>
                         </div>
                     </div>
                     <div class="submit">
@@ -144,7 +152,7 @@
                     </div>
                 </div>
             </div>
-        {% endif %} 
+        {% endif %}
     </div>
 
 

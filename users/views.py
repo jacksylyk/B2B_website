@@ -13,13 +13,15 @@ class Register(View):
     template_name = 'registration/register.html'
 
     def get(self, request):
-        form_data = request.session.pop('registration_form_data', None)
-        if form_data:
-            form = UserCreationForm(data=form_data)
-        else:
-            form = UserCreationForm()
+        user_data = request.session.pop('user')
+        form = UserCreationForm()
 
-        context = {'form': form}
+        context = {
+            'first_name': user_data['first_name'],
+            'last_name': user_data['last_name'],
+            'email': user_data['email'],
+            'phone': user_data['phone']
+        }
         return render(request, self.template_name, context)
 
     def post(self, request):
@@ -32,8 +34,6 @@ class Register(View):
             user = authenticate(email=email, password=password)
             login(request, user)
             return redirect('company_register')
-
-        request.session['registration_form_data'] = request.POST
 
         context = {'form': form}
         return render(request, self.template_name, context)
@@ -69,15 +69,22 @@ def registration_cancel(request):
         user_id = request.user.id
         user = get_user_model().objects.get(id=user_id)
 
-        # Logout and delete the user first
+        email = user.email
+        first_name  = user.first_name
+        last_name = user.last_name
+        phone = user.phone
+
         logout(request)
         user.delete()
 
-        # Save the form data in the session
-        request.session['registration_form_data'] = request.POST
-
-    return redirect('register')
-
+        context = {
+            'first_name': first_name,
+            'last_name': last_name,
+            'email': email,
+            'phone': phone
+        }
+        request.session['user'] = context
+        return redirect('register')
 
 def registration_finish(request):
     return render(request, 'registration/register_finish.html')
