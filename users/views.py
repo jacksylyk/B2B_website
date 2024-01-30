@@ -13,15 +13,17 @@ class Register(View):
     template_name = 'registration/register.html'
 
     def get(self, request):
-        user_data = request.session.pop('user')
+        user_data = request.session.pop('user', None)
         form = UserCreationForm()
-
-        context = {
-            'first_name': user_data['first_name'],
-            'last_name': user_data['last_name'],
-            'email': user_data['email'],
-            'phone': user_data['phone']
-        }
+        if user_data:
+            context = {
+                'first_name': user_data['first_name'],
+                'last_name': user_data['last_name'],
+                'email': user_data['email'],
+                'phone': user_data['phone']
+            }
+        else:
+            context = {}
         return render(request, self.template_name, context)
 
     def post(self, request):

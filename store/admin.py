@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, Characteristic
+from .models import Category, Product, Characteristic, Cart
 
 
 @admin.register(Category)
@@ -20,3 +20,7 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ['price', 'in_stock']
     prepopulated_fields = {'slug': ('name',)}
     inlines = [CharacteristicInline]
+
+@admin.register(Cart)
+class CartAdmin(admin.ModelAdmin):
+    list_display = ['user']

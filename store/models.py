@@ -3,6 +3,17 @@ from django.db import models
 from django.urls import reverse
 
 
+class Brand(models.Model):
+    name = models.CharField(max_length=50, db_index=True)
+    slug = models.SlugField(max_length=255, unique=True)
+
+    class Meta:
+        verbose_name_plural = "Бренды"
+
+    def __str__(self):
+        return self.name
+
+
 class Category(models.Model):
     name = models.CharField(max_length=50, db_index=True)
     slug = models.SlugField(max_length=255, unique=True)
@@ -10,15 +21,13 @@ class Category(models.Model):
     class Meta:
         verbose_name_plural = "Категории"
 
-    def get_absolute_url(self):
-        return reverse('store:category_list', args=[self.slug])
-
     def __str__(self):
         return self.name
 
 
 class Product(models.Model):
     category = models.ForeignKey(Category, related_name='product', on_delete=models.CASCADE)
+    brand = models.ForeignKey(Brand, related_name='brand_product', on_delete=models.CASCADE, null=True)
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="product_creator")
     name = models.CharField(max_length=255)
     description = models.TextField(blank=True)
