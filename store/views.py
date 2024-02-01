@@ -2,8 +2,8 @@ from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import DetailView
 
-from .forms import CartItemForm
-from .models import Category, Product, Cart, CartItem
+from .forms import CartItemForm, ProductFilterForm
+from .models import Category, Product, Cart, CartItem, Brand, Characteristic
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -20,10 +20,43 @@ def category_detail(request, category_id=None):
         category_id = default_category_id
 
     category = get_object_or_404(Category, id=category_id)
-    products = Product.objects.filter(category=category)
     categories = Category.objects.all()
+    brands = Brand.objects.filter(brand_product__category=category).distinct()
+    characteristics = Characteristic.objects.filter(is_filter=True)
 
-    return render(request, 'store/home.html', {'category': category, 'products': products, 'categories': categories})
+    # Get the brand and characteristic filters from the request
+    brand_filter = request.GET.getlist('brand')
+    brand_ids = Brand.objects.filter(name__in=brand_filter).values_list('id', flat=True)
+    characteristic_filter = request.GET.getlist('characteristic')
+    min_price = request.GET.get('min_price')
+    max_price = request.GET.get('max_price')
+    # If a brand filter is applied, filter the products by brand
+    if brand_ids:
+        products = Product.objects.filter(category=category, brand__in=brand_ids)
+    else:
+        products = Product.objects.filter(category=category)
+
+    # If a characteristic filter is applied, filter the products by characteristic
+    if characteristic_filter:
+        products = products.filter(characteristics__in=characteristic_filter)
+
+    if min_price or max_price:
+        if min_price:
+            products = products.filter(price__gte=min_price)
+        if max_price:
+            products = products.filter(price__lte=max_price)
+
+    context = {
+        'category_active': category,
+        'products': products,
+        'categories': categories,
+        'filter': {
+            'brands': brands,
+            'characteristics': characteristics,
+        }
+    }
+
+    return render(request, 'store/home.html', context)
 
 
 @login_required

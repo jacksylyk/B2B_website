@@ -83,24 +83,23 @@
                     <div class="fields">
                         <div class="input-box">
                             <label for="bin_number">БИН</label>
-                            <input id="bin_number" type="text" name="bin_number" required autocomplete="off">
+                            <input id="bin_number" type="text" name="bin_number" required autocomplete="off" maxlength="12" minlength="12">
                         </div>
                         <div class="input-box">
                             <label for="bik_number">БИК</label>
-                            <input id="bik_number" type="text" name="bik_number" required autocomplete="new-password">
+                            <input id="bik_number" type="text" name="bik_number" required maxlength="10" minlength="10">
                         </div>
                         <div class="input-box">
                             <label for="password2">Банк</label>
-                            <input id="password2" type="text" name="bank_name" required autocomplete="new-password">
+                            <input id="password2" type="text" name="bank_name" required>
                         </div>
                         <div class="input-box">
                             <label for="iban_number">ИИК (номер счёта)</label>
-                            <input id="iban_number" type="text" name="iban_number" required autocomplete="new-password">
+                            <input id="iban_number" type="text" name="iban_number" required maxlength="34" minlength="34">
                         </div>
                         <div class="input-box">
                             <label for="legal_company_address">Юридический адрес</label>
-                            <input id="legal_company_address" type="text" name="legal_company_address" required
-                                   autocomplete="new-password">
+                            <input id="legal_company_address" type="text" name="legal_company_address" required>
                         </div>
 
 
@@ -142,22 +141,16 @@
 
         document.querySelectorAll('.option').forEach(function (option) {
             option.addEventListener('click', function () {
-                // Remove "active" class from all options
                 document.querySelectorAll('.option').forEach(function (opt) {
                     opt.classList.remove('active');
                 });
 
-                // Add "active" class to the selected option
                 option.classList.add('active');
 
-                // Update the content of the "selected" div with only the title
                 selected.innerHTML = option.querySelector('.title').innerHTML;
 
-                // Update the hidden input field with the selected business type
                 hiddenInput.value = option.querySelector('.title').innerHTML;
-                console.log(hiddenInput.value);
 
-                // Hide the select body
                 selectBody.style.display = 'none';
             });
         });

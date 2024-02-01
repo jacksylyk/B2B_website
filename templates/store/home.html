@@ -4,6 +4,8 @@
 {% block styles %}
     <link rel="stylesheet" href="{% static '/common/css/home.css' %}">
     <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <link href="{% static 'common/js/nouislider.css' %}" rel="stylesheet">
+
 {% endblock styles %}
 {% block content %}
     <div id="myModal" class="modal">
@@ -15,23 +17,65 @@
         <div class="side">
             <div class="categories">
                 {% for category in categories %}
-                    <a href="{% url 'store:category_detail' category.id %}">
-                        <div class="category">{{ category.name }}</div>
-                    </a>
+                    <div class="category {% if category == category_active %}active{% endif %}"
+                         onclick="location.href='{% url 'store:category_detail' category.id %}';">{{ category.name }}</div>
                 {% endfor %}
             </div>
             <div class="filters">
-                <div class="title">Фильтр</div>
-                <div class="filter">
-                    <div class="title">Бренд</div>
-                    <div class="element">Spectra</div>
-                    <div class="element">Arman</div>
-                </div>
+                <form action="{% url 'store:category_detail' category.id|default:category_active.id %}" method="get">
+                    <div class="title">Фильтр</div>
+                    <div class="filter brands">
+                        <div class="filter__title">Бренд</div>
+                        <div class="filter__body">
+                            {% for brand in filter.brands %}
+                                <div class="custom-checkbox">
+                                    <input class="brand_check" type="checkbox" name="brand" value="{{ brand }}">
+                                    <div class="brand">{{ brand }}</div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="filter price">
+                        <div class="filter__title">Цена, ₸</div>
+                        <div class="filter__body">
+                            <div class=""><input type="text" name="min_price" id="min_price" placeholder=""></div>
+                            <div class=""><input type="text" name="max_price" id="max_price" placeholder=""></div>
+                        </div>
+                        <div class="price__slider">
+
+                            <div id="slider"></div>
+                            <script src="{% static 'common/js/nouislider.js' %}"></script>
+                            <script>
+                                var slider = document.getElementById('slider');
+
+                                noUiSlider.create(slider, {
+                                    start: [15000, 89999],
+                                    connect: true,
+                                    range: {
+                                        'min': [5000],
+                                        'max': [99999]
+                                    }
+                                });
+                                const min_price = document.getElementById('min_price');
+                                const max_price = document.getElementById('max_price');
+
+                                const inputs = [min_price, max_price];
+                                
+                                slider.noUiSlider.on('update', function (values, handle){
+                                    inputs[handle].value = Math.round(values[handle])
+                                })
+                            </script>
+                        </div>
+                    </div>
+                    <button type="submit">Применить фильтр</button>
+                </form>
+
+
             </div>
         </div>
         <div class="base">
             <div class="head">
-                <div class="title">{{ category }}</div>
+                <div class="title">{{ category_active }}</div>
                 <div class="input"></div>
             </div>
             <div class="status">
@@ -49,7 +93,7 @@
                         <div class="title"><a href="{% url 'store:product_detail' product.pk %}">{{ product }}</a></div>
                         <div class="quantity">В наличии {{ product.quantity }} шт</div>
                         <div class="footer">
-                            <div class="price">{{ product.price | price_filter}} ₸</div>
+                            <div class="price">{{ product.price | price_filter }} ₸</div>
                             {% if user.is_authenticated %}
                                 <form data-product-id="{{ product.id }}" method="post" class="add-to-cart-form">
                                     {% csrf_token %}

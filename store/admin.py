@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, Characteristic, Cart
+from .models import Category, Product, Characteristic, Cart, Brand
 
 
 @admin.register(Category)
@@ -21,6 +21,13 @@ class ProductAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
     inlines = [CharacteristicInline]
 
+
 @admin.register(Cart)
 class CartAdmin(admin.ModelAdmin):
     list_display = ['user']
+
+
+@admin.register(Brand)
+class BrandAdmin(admin.ModelAdmin):
+    list_display = ['name']
+    prepopulated_fields = {'slug': ('name',)}
