@@ -49,7 +49,7 @@
                                 var slider = document.getElementById('slider');
 
                                 noUiSlider.create(slider, {
-                                    start: [15000, 89999],
+                                    start: [{{ filter.min_price|default:5000 }}, {{ filter.max_price|default:99999 }}],
                                     connect: true,
                                     range: {
                                         'min': [5000],

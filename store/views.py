@@ -1,3 +1,4 @@
+from django.db.models import Min, Max
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import DetailView
@@ -53,6 +54,8 @@ def category_detail(request, category_id=None):
         'filter': {
             'brands': brands,
             'characteristics': characteristics,
+            'min_price': products.aggregate(Min('price'))['price__min'],
+            'max_price': products.aggregate(Max('price'))['price__max'],
         }
     }
 
