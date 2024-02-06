@@ -1,10 +1,16 @@
+import json
+import operator
+from collections import defaultdict
+from functools import reduce
+
+from django.db.models import Q
 from django.db.models import Min, Max
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import DetailView
 
 from .forms import CartItemForm, ProductFilterForm
-from .models import Category, Product, Cart, CartItem, Brand, Characteristic
+from .models import Category, Product, Cart, CartItem, Brand, Characteristic, CharacteristicValue
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -23,37 +29,53 @@ def category_detail(request, category_id=None):
     category = get_object_or_404(Category, id=category_id)
     categories = Category.objects.all()
     brands = Brand.objects.filter(brand_product__category=category).distinct()
-    characteristics = Characteristic.objects.filter(is_filter=True)
 
-    # Get the brand and characteristic filters from the request
+    characteristics = CharacteristicValue.objects.filter(product__category=category).distinct()
+    characteristics_filter = defaultdict(list)
+
+    for characteristic in characteristics:
+        characteristics_filter[characteristic.characteristic.name].append(characteristic.value)
+
     brand_filter = request.GET.getlist('brand')
     brand_ids = Brand.objects.filter(name__in=brand_filter).values_list('id', flat=True)
     characteristic_filter = request.GET.getlist('characteristic')
+
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
-    # If a brand filter is applied, filter the products by brand
-    if brand_ids:
-        products = Product.objects.filter(category=category, brand__in=brand_ids)
-    else:
-        products = Product.objects.filter(category=category)
 
-    # If a characteristic filter is applied, filter the products by characteristic
+    products = Product.objects.all()
+
     if characteristic_filter:
-        products = products.filter(characteristics__in=characteristic_filter)
+        char_names = [char.split('|')[0] for char in characteristic_filter]
+        char_values = [char.split('|')[1] for char in characteristic_filter]
+        chars_by_name = {}
 
-    if min_price or max_price:
-        if min_price:
-            products = products.filter(price__gte=min_price)
-        if max_price:
-            products = products.filter(price__lte=max_price)
+        for name, value in zip(char_names, char_values):
+            if name not in chars_by_name:
+                chars_by_name[name] = []
+            chars_by_name[name].append(value)
 
+        for name, values in chars_by_name.items():
+            filter_char = Characteristic.objects.get(name=name)
+            products &= products.filter(characteristicvalue__characteristic=filter_char,
+                                        characteristicvalue__value__in=values)
+
+    if brand_ids:
+        products = products.filter(category=category, brand__in=brand_ids)
+    else:
+        products = products.filter(category=category)
+
+    if min_price:
+        products = products.filter(price__gte=min_price)
+    if max_price:
+        products = products.filter(price__lte=max_price)
     context = {
         'category_active': category,
         'products': products,
         'categories': categories,
         'filter': {
             'brands': brands,
-            'characteristics': characteristics,
+            'characteristics': dict(characteristics_filter),
             'min_price': products.aggregate(Min('price'))['price__min'],
             'max_price': products.aggregate(Max('price'))['price__max'],
         }

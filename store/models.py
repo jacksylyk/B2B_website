@@ -49,10 +49,20 @@ class Product(models.Model):
 
 
 class Characteristic(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
     name = models.CharField(max_length=255, verbose_name="Название характеристики")
-    value = models.CharField(max_length=255, verbose_name="Значение характеристики")
     is_filter = models.BooleanField(default=False, verbose_name="Статус для фильтрации")
+
+    def __str__(self):
+        return f"{self.name}"
+
+
+class CharacteristicValue(models.Model):
+    value = models.CharField(max_length=100, verbose_name="Значение")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    characteristic = models.ForeignKey(Characteristic, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f"{self.characteristic.name}: {self.value}"
 
 
 class Cart(models.Model):
@@ -75,4 +85,3 @@ class CartItem(models.Model):
 
     def __str__(self):
         return f'{self.quantity} x {self.product}'
-

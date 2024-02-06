@@ -285,7 +285,7 @@ input.brand_check[type=checkbox]:hover ~ div.brand {
     gap: 1rem;
 }
 
-.filter__body > div > input {
+.filter.price .filter__body > div > input {
     padding: 1rem;
     width: 100%;
     height: 100%;

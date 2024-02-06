@@ -60,13 +60,35 @@
                                 const max_price = document.getElementById('max_price');
 
                                 const inputs = [min_price, max_price];
-                                
-                                slider.noUiSlider.on('update', function (values, handle){
+
+                                slider.noUiSlider.on('update', function (values, handle) {
                                     inputs[handle].value = Math.round(values[handle])
                                 })
                             </script>
                         </div>
                     </div>
+                    {% for i in characteristics %}
+                        <p>1</p>
+                    {% endfor %}
+                    {% for characteristic_title, characteristic_values in filter.characteristics.items %}
+                        <div class="filter characteristics">
+                            <div class="filter__title">{{ characteristic_title }}</div>
+                            <div class="filter__body">
+                                {% for value in characteristic_values %}
+                                    <div class="check">
+                                        <input type="checkbox"
+                                               id="check_{{ forloop.parentloop.counter0 }}_{{ forloop.counter }}"
+                                               name="characteristic" value="{{ characteristic_title }}|{{ value }}">
+                                        <label class="value"
+                                               for="check_{{ forloop.parentloop.counter0 }}_{{ forloop.counter }}">{{ value }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    {% endfor %}
+
+
+
                     <button type="submit">Применить фильтр</button>
                 </form>
 
