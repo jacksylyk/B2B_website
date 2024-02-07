@@ -44,7 +44,10 @@ def category_detail(request, category_id=None):
     max_price = request.GET.get('max_price')
 
     products = Product.objects.all()
-
+    if min_price:
+        products = products.filter(price__gte=min_price)
+    if max_price:
+        products = products.filter(price__lte=max_price)
     if characteristic_filter:
         char_names = [char.split('|')[0] for char in characteristic_filter]
         char_values = [char.split('|')[1] for char in characteristic_filter]
@@ -65,10 +68,6 @@ def category_detail(request, category_id=None):
     else:
         products = products.filter(category=category)
 
-    if min_price:
-        products = products.filter(price__gte=min_price)
-    if max_price:
-        products = products.filter(price__lte=max_price)
     context = {
         'category_active': category,
         'products': products,
@@ -76,8 +75,8 @@ def category_detail(request, category_id=None):
         'filter': {
             'brands': brands,
             'characteristics': dict(characteristics_filter),
-            'min_price': products.aggregate(Min('price'))['price__min'],
-            'max_price': products.aggregate(Max('price'))['price__max'],
+            'min_price': min_price if min_price is not None else Product.objects.aggregate(Min('price'))['price__min'],
+            'max_price': max_price if max_price is not None else Product.objects.aggregate(Max('price'))['price__max'],
         }
     }
 

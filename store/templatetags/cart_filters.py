@@ -18,3 +18,17 @@ def multiply(value, arg):
 @register.filter(name='price_filter')
 def price_filter(price):
     return intcomma(price).replace(',', ' ')
+
+
+@register.filter(name='get_list')
+def get_list(dictionary, key):
+    return dictionary.getlist(key)
+
+
+@register.filter(name='combine')
+def combine(title, value):
+    return f"{title}|{value}"
+
+@register.filter(name='string')
+def combine(brand):
+    return f"{brand}"

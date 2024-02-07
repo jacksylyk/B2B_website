@@ -29,7 +29,14 @@
                         <div class="filter__body">
                             {% for brand in filter.brands %}
                                 <div class="custom-checkbox">
-                                    <input class="brand_check" type="checkbox" name="brand" value="{{ brand }}">
+                                    {% if 'brand' in request.GET and brand|string in request.GET|get_list:'brand' %}
+                                        <input class="brand_check popup-trigger" type="checkbox" name="brand"
+                                               value="{{ brand }}"
+                                               checked>
+                                    {% else %}
+                                        <input class="brand_check popup-trigger" type="checkbox" name="brand"
+                                               value="{{ brand }}">
+                                    {% endif %}
                                     <div class="brand">{{ brand }}</div>
                                 </div>
                             {% endfor %}
@@ -38,8 +45,10 @@
                     <div class="filter price">
                         <div class="filter__title">Цена, ₸</div>
                         <div class="filter__body">
-                            <div class=""><input type="text" name="min_price" id="min_price" placeholder=""></div>
-                            <div class=""><input type="text" name="max_price" id="max_price" placeholder=""></div>
+                            <div class=""><input type="text" name="min_price" id="min_price" class="popup-trigger"
+                                                 placeholder=""></div>
+                            <div class=""><input type="text" name="max_price" id="max_price" class="popup-trigger"
+                                                 placeholder=""></div>
                         </div>
                         <div class="price__slider">
 
@@ -76,9 +85,20 @@
                             <div class="filter__body">
                                 {% for value in characteristic_values %}
                                     <div class="check">
-                                        <input type="checkbox"
-                                               id="check_{{ forloop.parentloop.counter0 }}_{{ forloop.counter }}"
-                                               name="characteristic" value="{{ characteristic_title }}|{{ value }}">
+                                        {% with combined_char=characteristic_title|combine:value %}
+                                            {% if 'characteristic' in request.GET and combined_char in request.GET|get_list:'characteristic' %}
+                                                <input type="checkbox" class="popup-trigger"
+                                                       id="check_{{ forloop.parentloop.counter0 }}_{{ forloop.counter }}"
+                                                       name="characteristic"
+                                                       value="{{ characteristic_title }}|{{ value }}"
+                                                       checked>
+                                            {% else %}
+                                                <input type="checkbox" class="popup-trigger"
+                                                       id="check_{{ forloop.parentloop.counter0 }}_{{ forloop.counter }}"
+                                                       name="characteristic"
+                                                       value="{{ characteristic_title }}|{{ value }}">
+                                            {% endif %}
+                                        {% endwith %}
                                         <label class="value"
                                                for="check_{{ forloop.parentloop.counter0 }}_{{ forloop.counter }}">{{ value }}</label>
                                     </div>
@@ -89,7 +109,9 @@
 
 
 
-                    <button type="submit">Применить фильтр</button>
+                    <div id="popup-container" style="" class="pop_up_submit">
+                        <button type="submit" id="popup-submit" class="form-button">Применить фильтр</button>
+                    </div>
                 </form>
 
 
@@ -173,6 +195,38 @@
                     $('#myModal').css('display', 'none');
                 }
             });
+        });
+    </script>
+    <script>
+        // Function to show the popup container below the modified field
+        function showPopupContainer(triggerField) {
+            // Find the corresponding filter body element
+            var filterBody = triggerField.closest('.filter').querySelector('.filter__body');
+            // Show the popup container below the filter body
+            var popupContainer = document.getElementById('popup-container');
+            popupContainer.style.top = (filterBody.offsetTop + filterBody.offsetHeight) + 'px';
+            popupContainer.classList.add('show'); // Add the 'show' class
+        }
+
+        // Function to hide the popup container
+        function hidePopupContainer() {
+            var popupContainer = document.getElementById('popup-container');
+            popupContainer.classList.remove('show'); // Remove the 'show' class
+        }
+
+        // Add event listeners to the input fields
+        document.querySelectorAll('.popup-trigger').forEach(function (input) {
+            input.addEventListener('input', function () {
+                showPopupContainer(this); // Pass the triggering input field to the showPopupContainer function
+            });
+        });
+
+        // Get the slider element
+        var slider = document.getElementById('slider');
+
+        // Add an event listener to the slider for change events
+        slider.noUiSlider.on('change', function (values, handle) {
+            showPopupContainer(this); // Pass the slider element to the showPopupContainer function
         });
     </script>
 
