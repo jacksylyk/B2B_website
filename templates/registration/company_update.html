@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Личный кабинет{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static '/common/css/account_detail.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="head">
+            <div class="title">
+                Личный кабинет
+            </div>
+            <div class="links">
+                <div class="link" onclick="location.href='{% url 'personal_account_detail' %}';">Персональные данные</div>
+                <div class="link active" onclick="location.href='{% url 'company_details' %}';">Данные компании</div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="side text">
+                <div class="">
+                    <div class="title">Данные компании</div>
+                    <div class="text">Введите информацию о компании </div>
+                </div>
+            </div>
+            <div class="side">
+                <form action="{% url 'company_details' %}" method="post">
+                    {% csrf_token %}
+                    <div class="fields">
+                        <div class="row">
+                            <div class="input-box">
+                                <label for="legal_company_name">{{ form.legal_company_name.title }}</label>
+                                <input id="legal_company_name" type="text" name="legal_company_name" required autocomplete="off"
+                                       value="{{ form.legal_company_name.value }}">
+                            </div>
+                            <div class="input-box">
+                                <label for="field_of_activity">{{ form.field_of_activity.label }}</label>
+                                <input disabled id="field_of_activity" type="text" name="field_of_activity" required autocomplete="off"
+                                       value="{{ form.field_of_activity.value }}">
+                            </div>
+                        </div>
+                        <div class="input-box">
+                            <label for="bin_number">{{ form.bin_number.label }}</label>
+                            <input id="bin_number" type="text" name="bin_number" required autocomplete="off" value="{{ form.bin_number.value }}">
+                        </div>
+                        <div class="input-box">
+                            <label for="bik_number">{{ form.bik_number.label }}</label>
+                            <input id="bik_number" type="text" name="bik_number" required autocomplete="off" value="{{ form.bik_number.value }}">
+                        </div>
+                        <div class="input-box">
+                            <label for="bin_number">{{ form.bank_name.label }}</label>
+                            <input id="bin_number" type="text" name="bank_name" required autocomplete="off" value="{{ form.bank_name.value }}">
+                        </div>
+                        <div class="input-box">
+                            <label for="iban_number">{{ form.iban_number.label }}</label>
+                            <input id="iban_number" type="text" name="iban_number" required autocomplete="off" value="{{ form.iban_number.value }}">
+                        </div>
+                        <div class="input-box">
+                            <label for="legal_company_address">{{ form.legal_company_address.label }}</label>
+                            <input id="legal_company_address" type="text" name="legal_company_address" required autocomplete="off" value="{{ form.legal_company_address.value }}">
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <button class="cancel-button" type="button" onclick="location.href='{% url 'store:index' %}';">Отменить</button>
+                        <button class="submit" type="submit">Сохранить и продолжить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

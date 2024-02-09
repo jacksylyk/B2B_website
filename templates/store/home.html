@@ -211,22 +211,19 @@
         // Function to hide the popup container
         function hidePopupContainer() {
             var popupContainer = document.getElementById('popup-container');
-            popupContainer.classList.remove('show'); // Remove the 'show' class
+            popupContainer.classList.remove('show'); 
         }
 
-        // Add event listeners to the input fields
         document.querySelectorAll('.popup-trigger').forEach(function (input) {
             input.addEventListener('input', function () {
-                showPopupContainer(this); // Pass the triggering input field to the showPopupContainer function
+                showPopupContainer(this); 
             });
         });
 
-        // Get the slider element
         var slider = document.getElementById('slider');
 
-        // Add an event listener to the slider for change events
         slider.noUiSlider.on('change', function (values, handle) {
-            showPopupContainer(this); // Pass the slider element to the showPopupContainer function
+            showPopupContainer(this); 
         });
     </script>
 

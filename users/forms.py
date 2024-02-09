@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model, password_validation
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from django import forms
 from django.forms import ModelForm
 from django.utils.translation import gettext_lazy as _
@@ -38,3 +38,16 @@ class CompanyCreationForm(ModelForm):
     class Meta:
         model = Company
         exclude = ['user']
+
+
+class UserUpdateForm(UserChangeForm):
+    class Meta:
+        model = User
+        fields = ['first_name', 'last_name', 'email', 'phone']
+
+
+class CompanyUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Company
+        fields = ['legal_company_name', 'field_of_activity', 'type_of_business', 'bin_number', 'bik_number',
+                  'bank_name', 'iban_number', 'legal_company_address']

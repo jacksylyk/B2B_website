@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Личный кабинет{% endblock %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static '/common/css/account_detail.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="head">
+            <div class="title">
+                Личный кабинет
+            </div>
+            <div class="links">
+                <div class="link active" onclick="location.href='{% url 'personal_account_detail' %}';">Персональные данные</div>
+                <div class="link " onclick="location.href='{% url 'company_details' %}';">Данные компании</div>
+            </div>
+        </div>
+        <div class="content">
+            <div class="side text">
+                <div class="">
+                    <div class="title">Персональные данные</div>
+                    <div class="text">Введите ваши данные</div>
+                </div>
+            </div>
+            <div class="side">
+                <form action="{% url 'personal_account_detail' %}" method="post">
+                    {% csrf_token %}
+                    <div class="fields">
+                        <div class="row">
+                            <div class="input-box">
+                                <label for="first-name">{{ form.first_name.label }}</label>
+                                <input id="first-name" type="text" name="first_name" required autocomplete="off"
+                                       value="{{ form.first_name.value }}">
+                            </div>
+                            <div class="input-box">
+                                <label for="last-name">{{ form.last_name.label }}</label>
+                                <input id="last-name" type="text" name="last_name" required autocomplete="off"
+                                       value="{{ form.last_name.value }}">
+                            </div>
+                        </div>
+                        <div class="input-box">
+                            <label for="phone">{{ form.phone.label }}</label>
+                            <input id="phone" type="tel" name="phone" required autocomplete="off" value="{{ form.phone.value }}">
+                        </div>
+                        <div class="input-box">
+                            <label for="email">{{ form.email.label }}</label>
+                            <input id="email" type="email" name="email" required autocomplete="off" value="{{ form.email.value }}">
+                        </div>
+                    </div>
+                    <div class="buttons">
+                        <button class="cancel-button" type="button" onclick="location.href='{% url 'store:index' %}';">Отменить</button>
+                        <button class="submit" type="submit">Сохранить и продолжить</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

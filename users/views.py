@@ -5,8 +5,9 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import View, generic
 
-from users.forms import UserCreationForm, CompanyCreationForm
+from users.forms import UserCreationForm, CompanyCreationForm, UserUpdateForm, CompanyUpdateForm
 from users.models import Company, BusinessType
+from django.contrib.auth.decorators import login_required
 
 
 class Register(View):
@@ -72,7 +73,7 @@ def registration_cancel(request):
         user = get_user_model().objects.get(id=user_id)
 
         email = user.email
-        first_name  = user.first_name
+        first_name = user.first_name
         last_name = user.last_name
         phone = user.phone
 
@@ -88,5 +89,42 @@ def registration_cancel(request):
         request.session['user'] = context
         return redirect('register')
 
+
 def registration_finish(request):
     return render(request, 'registration/register_finish.html')
+
+
+@login_required
+def account_details(request):
+    user = request.user
+    if request.method == 'POST':
+        form = UserUpdateForm(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('personal_account_detail')
+    else:
+        form = UserUpdateForm(instance=user)
+
+    context = {'user': user, 'form': form}
+    return render(request, 'registration/account_detail.html', context)
+
+
+@login_required
+def company_details(request):
+    user = request.user
+    try:
+        company = Company.objects.get(user=user)
+    except Company.DoesNotExist:
+        company = None
+
+    if request.method == 'POST':
+        form = CompanyUpdateForm(request.POST, instance=company)
+        if form.is_valid():
+            form.save()
+            return redirect('company_detail')  # Assuming you have a view for viewing company details
+    else:
+        form = CompanyUpdateForm(instance=company)
+
+    context = {'form': form}
+    return render(request, 'registration/company_update.html', context)
+

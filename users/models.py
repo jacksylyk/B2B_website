@@ -7,12 +7,12 @@ from .manager import Manager
 
 class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(
-        _('email address'),
+        _('email'),
         unique=True,
     )
     first_name = models.CharField(max_length=128, verbose_name='Имя')
     last_name = models.CharField(max_length=128, verbose_name='Фамилия')
-    phone = models.CharField(max_length=20, verbose_name='Личный телефон', unique=True)
+    phone = models.CharField(max_length=20, verbose_name='Телефон', unique=True)
     is_staff = models.BooleanField(default=False, verbose_name='Доступ к админ панели')
     is_active = models.BooleanField(default=True, verbose_name='Активен')
 
