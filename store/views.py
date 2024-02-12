@@ -2,15 +2,16 @@ import json
 import operator
 from collections import defaultdict
 from functools import reduce
+from django.db import transaction
+from django.db.models import Case, Value, When, IntegerField
 
-from django.db.models import Q
 from django.db.models import Min, Max
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.generic import DetailView
 
 from .forms import CartItemForm, ProductFilterForm
-from .models import Category, Product, Cart, CartItem, Brand, Characteristic, CharacteristicValue
+from .models import Category, Product, Cart, CartItem, Brand, Characteristic, CharacteristicValue, Order, OrderItem
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
@@ -20,6 +21,8 @@ class ProductDetailView(DetailView):
     template_name = 'store/product_detail.html'
     context_object_name = 'product'
 
+
+from django.db.models import Case, Value, When, IntegerField
 
 def category_detail(request, category_id=None):
     default_category_id = 1
@@ -43,7 +46,16 @@ def category_detail(request, category_id=None):
     min_price = request.GET.get('min_price')
     max_price = request.GET.get('max_price')
 
-    products = Product.objects.all()
+    quantity_filter = request.GET.get('quantity')  # Get quantity filter value
+
+    # Annotate the queryset with the quantity annotation
+    products = Product.objects.annotate(annotated_quantity=Case(
+        When(quantity__gt=0, then=Value(1)),
+        default=Value(0),
+        output_field=IntegerField(),
+    ))
+
+    # Filter products based on other criteria
     if min_price:
         products = products.filter(price__gte=min_price)
     if max_price:
@@ -60,13 +72,19 @@ def category_detail(request, category_id=None):
 
         for name, values in chars_by_name.items():
             filter_char = Characteristic.objects.get(name=name)
-            products &= products.filter(characteristicvalue__characteristic=filter_char,
+            products = products.filter(characteristicvalue__characteristic=filter_char,
                                         characteristicvalue__value__in=values)
 
     if brand_ids:
         products = products.filter(category=category, brand__in=brand_ids)
     else:
         products = products.filter(category=category)
+
+    # Apply quantity filter
+    if quantity_filter == 'in_stock':
+        products = products.filter(annotated_quantity__gt=0)
+    elif quantity_filter == 'out_of_stock':
+        products = products.filter(annotated_quantity=0)
 
     context = {
         'category_active': category,
@@ -81,6 +99,7 @@ def category_detail(request, category_id=None):
     }
 
     return render(request, 'store/home.html', context)
+
 
 
 @login_required
@@ -146,3 +165,43 @@ def get_user_cart(user):
     if user.is_authenticated:
         return Cart.objects.get_or_create(user=user)[0]
     return None
+
+
+from django.db.models import F
+
+@login_required
+def create_order(request):
+    user_cart = get_user_cart(request.user)
+    if request.method == 'POST':
+        delivery_type = request.POST.get('delivery')
+        city = request.POST.get('city')
+        street = request.POST.get('street')
+        house_number = request.POST.get('house_number')
+        phone_number = request.POST.get('phone_number')
+
+        if user_cart:
+            with transaction.atomic():
+                order = Order.objects.create(user=request.user, delivery=delivery_type, city=city, street=street, house_number=house_number, phone_number=phone_number)
+                for cart_item in user_cart.items.all():
+                    # Reduce the quantity of ordered items from the stock
+                    if cart_item.product.quantity > 0:  # Check if there is enough stock
+                        cart_item.product.quantity = F('quantity') - cart_item.quantity  # Update the stock quantity
+                        cart_item.product.save()  # Save the changes to the product
+                    else:
+                        # Handle the case where there is not enough stock
+                        return "Sorry, you don't have enough"
+                    OrderItem.objects.create(order=order, product=cart_item.product, quantity=cart_item.quantity, price=cart_item.product.price)
+                # Clear user's cart after creating the order
+                user_cart.products.clear()
+            return render(request, 'store/cart_detail.html', {'order': order})
+        else:
+            return redirect('store:index')
+
+
+
+@login_required
+def my_orders(request):
+    # Retrieve orders associated with the current user
+    orders = Order.objects.filter(user=request.user).order_by('-created')
+
+    return render(request, 'store/orders.html', {'orders': orders})

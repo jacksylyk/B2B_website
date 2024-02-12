@@ -10,6 +10,11 @@ def total_price(cart_items):
     return sum(item.product.price * item.quantity for item in cart_items)
 
 
+@register.filter(name='total_quantity')
+def total_quantity(cart_items):
+    return sum(item.quantity for item in cart_items)
+
+
 @register.filter(name='multiply')
 def multiply(value, arg):
     return value * arg
@@ -29,6 +34,7 @@ def get_list(dictionary, key):
 def combine(title, value):
     return f"{title}|{value}"
 
+
 @register.filter(name='string')
-def combine(brand):
+def string(brand):
     return f"{brand}"

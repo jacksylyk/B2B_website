@@ -108,7 +108,7 @@
                     {% endfor %}
 
 
-
+                    <input type="hidden" name="quantity" id="quantity-filter" value="">
                     <div id="popup-container" style="" class="pop_up_submit">
                         <button type="submit" id="popup-submit" class="form-button">Применить фильтр</button>
                     </div>
@@ -124,9 +124,9 @@
             </div>
             <div class="status">
                 <div class="buttons">
-                    <div class="button active">Все</div>
-                    <div class="button">Товары со склада</div>
-                    <div class="button">На заказ</div>
+                    <div class="button active" data-quantity-filter="all">Все</div>
+                    <div class="button" data-quantity-filter="in_stock">Товары со склада</div>
+                    <div class="button" data-quantity-filter="out_of_stock">На заказ</div>
                 </div>
                 <div class="sort">Сортировка</div>
             </div>
@@ -135,7 +135,8 @@
                     <div class="product">
                         <div class="image"><img src="{{ product.image.url }}" alt=""></div>
                         <div class="title"><a href="{% url 'store:product_detail' product.pk %}">{{ product }}</a></div>
-                        <div class="quantity">В наличии {{ product.quantity }} шт</div>
+                        <div class="quantity" data-annotated-quantity="{{ product.annotated_quantity }}">{% if product.quantity %}В наличии
+                            {{ product.quantity }} шт{% else %}на заказ{% endif %}</div>
                         <div class="footer">
                             <div class="price">{{ product.price | price_filter }} ₸</div>
                             {% if user.is_authenticated %}
@@ -164,7 +165,6 @@
                     method: 'post',
                     data: $(this).closest('.add-to-cart-form').serialize(),
                     success: function (data) {
-                        // Add a custom alert here with a timeout
                         showModal('Ваш продукт добавлен в корзину', 1000);
                     },
                     error: function (error) {
@@ -211,20 +211,41 @@
         // Function to hide the popup container
         function hidePopupContainer() {
             var popupContainer = document.getElementById('popup-container');
-            popupContainer.classList.remove('show'); 
+            popupContainer.classList.remove('show');
         }
 
         document.querySelectorAll('.popup-trigger').forEach(function (input) {
             input.addEventListener('input', function () {
-                showPopupContainer(this); 
+                showPopupContainer(this);
             });
         });
 
         var slider = document.getElementById('slider');
 
         slider.noUiSlider.on('change', function (values, handle) {
-            showPopupContainer(this); 
+            showPopupContainer(this);
         });
     </script>
+    <script>
+        $(document).ready(function () {
+            // Function to handle quantity filter selection
+            $('.buttons .button').on('click', function () {
+                var quantityFilter = $(this).data('quantity-filter');
+                $('.buttons .button').removeClass('active'); // Remove 'active' class from all buttons
+                $(this).addClass('active'); // Add 'active' class to the clicked button
+
+                // Show or hide products based on the selected quantity filter
+                $('.product').each(function () {
+                    var annotatedQuantity = parseInt($(this).find('.quantity').data('annotated-quantity'));
+                    if (quantityFilter === 'all' || (quantityFilter === 'in_stock' && annotatedQuantity > 0) || (quantityFilter === 'out_of_stock' && annotatedQuantity === 0)) {
+                        $(this).show(); // Show the product
+                    } else {
+                        $(this).hide(); // Hide the product
+                    }
+                });
+            });
+        });
+    </script>
+
 
 {% endblock %}

@@ -142,6 +142,7 @@
     aspect-ratio: 1 / 1;
 }
 
+
 .price-quantity > .quantity  .btn {
     border-radius: 0.125rem;
     background: var(--BG, #F6F6F6);
@@ -238,7 +239,7 @@
     flex-shrink: 0;
 }
 
-.cart-detail > .side > .delivery {
+.cart-detail > .side  .delivery {
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -247,7 +248,7 @@
     background: #FFFFFF;
 }
 
-.cart-detail > .side > .delivery > .title {
+.cart-detail > .side  .delivery > .title {
     color: var(--Text-black, #3E3E3E);
     font-size: 1.5rem;
     font-style: normal;
@@ -255,13 +256,13 @@
     line-height: normal;
 }
 
-.cart-detail > .side > .delivery > .delivery_types {
+.cart-detail > .side  .delivery > .delivery_types {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
-.cart-detail > .side > .delivery > .delivery_types > .type {
+.cart-detail > .side  .delivery > .delivery_types > .type {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -298,11 +299,14 @@
     line-height: normal;
 }
 
-.cart-detail > .side > .delivery > .form {
+.cart-detail > .side  .delivery > .form {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    z-index: 99;
+    padding: 1.25rem 0;
 }
+
 
 .input-box {
     position: relative;
@@ -331,9 +335,10 @@
     font-weight: 600;
     line-height: 1rem; /* 133.333% */
     letter-spacing: 0.03125rem;
+
 }
 
-.side > .result {
+.side  .result {
     display: flex;
     flex-direction: column;
     padding: 2rem;
@@ -343,7 +348,7 @@
     gap: 2rem;
 }
 
-.side > .result > .title {
+.side .result > .title {
     color: var(--Text-black, #3E3E3E);
     font-size: 1.5rem;
     font-style: normal;
@@ -351,25 +356,25 @@
     line-height: normal;
 }
 
-.side > .result > .bill {
+.side  .result > .bill {
 
 }
 
-.side > .result > .bill > .group {
+.side .result > .bill > .group {
     display: flex;
     flex-direction: column;
     gap: 1rem;
     padding-bottom: 2rem;
 }
 
-.side > .result > .bill > .group > .field {
+.side .result > .bill > .group > .field {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
 }
 
-.side > .result > .bill > .group > .field > .name {
+.side .result > .bill > .group > .field > .name {
     color: var(--Main-color-Black, #3E3E3E);
     font-size: 1rem;
     font-style: normal;
@@ -377,7 +382,7 @@
     line-height: normal;
 }
 
-.side > .result > .bill > .group > .field > .value {
+.side .result > .bill > .group > .field > .value {
     color: var(--Main-color-Black, #3E3E3E);
     text-align: right;
     font-size: 1.5rem;
@@ -386,7 +391,7 @@
     line-height: normal;
 }
 
-.side > .result > .bill > .total-price {
+.side .result > .bill > .total-price {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -394,7 +399,7 @@
     border-top: dashed  #D9D9D9;
 }
 
-.side > .result > .bill > .total-price > .name {
+.side .result > .bill > .total-price > .name {
     color: var(--Main-color-Black, #3E3E3E);
     font-size: 0.875rem;
     font-style: normal;
@@ -402,7 +407,7 @@
     line-height: normal;
 }
 
-.side > .result > .bill > .total-price > .value {
+.side .result > .bill > .total-price > .value {
     color: var(--Cuman-light-green, #7BAF21);
     text-align: right;
     font-size: 1.25rem;
@@ -411,7 +416,7 @@
     line-height: normal;
 }
 
-.side > .result > .submit > button {
+.side .result > .submit > button {
     border: none;
     border-radius: 0.25rem;
     background: #285F38;

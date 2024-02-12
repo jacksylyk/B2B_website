@@ -2,6 +2,7 @@
 {% load cart_filters static %}
 {% block styles %}
     <link rel="stylesheet" href="{% static '/common/css/cart_detail.css' %}">
+    <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
 {% endblock styles %}
 {% block title %}
     Корзина
@@ -82,78 +83,99 @@
 
             <div class="side">
                 <div class="search"><input type="text" placeholder="Поиск"></div>
-                <div class="delivery">
-                    <div class="title">Способ доставки</div>
-                    <div class="delivery_types">
-                        <div class="type">
-                            <div class="content">
-                                <div class="ico"><img src="{% static 'common/images/samovyvoz.svg' %}" alt=""></div>
-                                <div class="text">
-                                    <div class="title">Самовывоз (бесплатно)</div>
-                                    <div class="text">г.Нур-Султан, ул. Аль-Фараби 87/1</div>
+                <form action="{% url 'store:create_order' %}" method="post">
+                    {% csrf_token %}
+                    <div class="delivery">
+                        <div class="title">Способ доставки</div>
+                        <div class="delivery_types">
+                            <div class="type">
+                                <div class="content">
+                                    <div class="ico"><img src="{% static 'common/images/samovyvoz.svg' %}" alt=""></div>
+                                    <div class="text">
+                                        <div class="title">Самовывоз (бесплатно)</div>
+                                        <div class="text">г.Нур-Султан, ул. Аль-Фараби 87/1</div>
+                                    </div>
+                                </div>
+                                <div class="checkbox">
+                                    <input type="radio" name="delivery" value="0" checked>
                                 </div>
                             </div>
-                            <div class="checkbox">
-                                <input type="checkbox" value="0">
-                            </div>
-                        </div>
-                        <div class="type">
-                            <div class="content">
-                                <div class="ico"><img src="{% static 'common/images/dostavka.svg' %}" alt=""></div>
-                                <div class="text">
-                                    <div class="title">Доставка</div>
-                                    <div class="text">Выберите адрес</div>
+                            <div class="type">
+                                <div class="content">
+                                    <div class="ico"><img src="{% static 'common/images/dostavka.svg' %}" alt=""></div>
+                                    <div class="text">
+                                        <div class="title">Доставка</div>
+                                        <div class="text">Выберите адрес</div>
+                                    </div>
+                                </div>
+                                <div class="checkbox">
+                                    <input type="radio" name="delivery" value="1">
                                 </div>
                             </div>
-                            <div class="checkbox">
-                                <input type="checkbox" value="0">
+                        </div>
+                        <div class="form" id="delivery-form" style="display: none">
+                            <div class="input-box">
+                                <label for="city">Город</label>
+                                <input id="city" type="text" name="city" autocomplete="off">
+                            </div>
+                            <div class="input-box">
+                                <label for="street">Улица</label>
+                                <input id="street" type="text" name="street" autocomplete="off">
+                            </div>
+                            <div class="input-box">
+                                <label for="house">Дом / Офис</label>
+                                <input id="house" type="text" name="house_number" autocomplete="off">
+                            </div>
+                            <div class="input-box">
+                                <label for="number">Контактный номер</label>
+                                <input id="number" type="tel" name="phone_number" autocomplete="off">
                             </div>
                         </div>
                     </div>
-                    <div class="form">
-                        <div class="input-box">
-                            <label for="city">Город</label>
-                            <input id="city" type="text" name="first_name" required autocomplete="off">
-                        </div>
-                        <div class="input-box">
-                            <label for="street">Улица</label>
-                            <input id="street" type="text" name="first_name" required autocomplete="off">
-                        </div>
-                        <div class="input-box">
-                            <label for="house">Дом / Офис</label>
-                            <input id="house" type="text" name="first_name" required autocomplete="off">
-                        </div>
-                        <div class="input-box">
-                            <label for="number">Контактный номер</label>
-                            <input id="number" type="tel" name="first_name" required autocomplete="off">
-                        </div>
-                    </div>
-                </div>
-                <div class="result">
-                    <div class="title">Сумма к оплате</div>
-                    <div class="bill">
-                        <div class="group">
-                            <div class="price field">
-                                <div class="name">5 товаров на сумму</div>
-                                <div class="value">{{ cart_items | total_price | price_filter}} ₸</div>
+                    <div class="result">
+                        <div class="title">Сумма к оплате</div>
+                        <div class="bill">
+                            <div class="group">
+                                <div class="price field">
+                                    <div class="name">{{ cart_items | total_quantity }} товаров на сумму</div>
+                                    <div class="value">{{ cart_items | total_price | price_filter }} ₸</div>
+                                </div>
+                                <div class="delivery-price field">
+                                    <div class="name">Доставка</div>
+                                    <div class="value">? ??? ₸</div>
+                                </div>
                             </div>
-                            <div class="delivery-price field">
-                                <div class="name">Доставка</div>
-                                <div class="value">? ??? ₸</div>
+                            <div class="total-price">
+                                <div class="name">С учетом НДС</div>
+                                <div class="value">?? ??? ??? ₸</div>
                             </div>
                         </div>
-                        <div class="total-price">
-                            <div class="name">С учетом НДС</div>
-                            <div class="value">?? ??? ??? ₸</div>
+                        <div class="submit">
+                            <button>Оформить заказ</button>
                         </div>
                     </div>
-                    <div class="submit">
-                        <button>Оформить заказ</button>
-                    </div>
-                </div>
+                </form>
             </div>
         {% endif %}
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const deliveryInputs = document.querySelectorAll('input[name="delivery"]');
+            const deliveryForm = $('#delivery-form');
+
+            function toggleForm() {
+                if (this.value === '1') {
+                    deliveryForm.slideDown();
+                } else {
+                    deliveryForm.slideUp();
+                }
+            }
+
+            deliveryInputs.forEach(function (input) {
+                input.addEventListener('change', toggleForm);
+            });
+        });
+    </script>
 
 
 {% endblock %}
