@@ -38,3 +38,11 @@ def combine(title, value):
 @register.filter(name='string')
 def string(brand):
     return f"{brand}"
+
+
+@register.filter(name='result_price')
+def result_price(total_price, delivery_price):
+    total_price = int(total_price)
+    delivery_price = int(delivery_price)
+    result = (total_price + delivery_price) * 1.12
+    return result

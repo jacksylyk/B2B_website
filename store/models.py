@@ -75,9 +75,6 @@ class Cart(models.Model):
     def __str__(self):
         return f"{self.user}'s cart"
 
-    def get_absolute_url(self):
-        return reverse("store:cart_detail")
-
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, related_name='items', on_delete=models.CASCADE)
@@ -97,16 +94,27 @@ class Order(models.Model):
     paid = models.BooleanField(default=False)
     completed = models.BooleanField(default=False)
     delivery = models.BooleanField(default=False)
-    city = models.CharField(max_length=255, blank=True)
-    street = models.CharField(max_length=255, blank=True)
-    house_number = models.CharField(max_length=255, blank=True)
+    city = models.CharField(max_length=255, blank=True, default="Астана")
+    street = models.CharField(max_length=255, blank=True, default="Акжол")
+    house_number = models.CharField(max_length=255, blank=True, default="97/1")
     phone_number = models.CharField(max_length=255, blank=True)
 
     def __str__(self):
         return f'Order {self.id}'
 
+    # TODO Указать сумму доставки
+    def get_price_delivery(self):
+        if self.delivery:
+            return 5000
+        return 2000
+
+    #TODO Добавить цену с учетом НДС
     def get_total_amount(self):
-        return sum(item.get_item_total() for item in self.order_items.all())
+        if self.delivery:
+            price = sum(item.get_item_total() for item in self.order_items.all()) + self.get_price_delivery()
+        else:
+            price = sum(item.get_item_total() for item in self.order_items.all())
+        return price
 
 
 class OrderItem(models.Model):

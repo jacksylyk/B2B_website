@@ -1,16 +1,196 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Home{% endblock title %}
+{% block title %}{{ product }}{% endblock title %}
 {% block styles %}
-{#    <link rel="stylesheet" href="{% static '/common/css/home.css' %}">#}
+    <link rel="stylesheet" href="{% static '/common/css/product.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 {% endblock styles %}
 {% block content %}
-    <div class="container">
-        <h1>{{ product }}</h1>
-        <h3>Характеристики</h3>
-        {% for char in product.characteristic_set.all %}
-            <h5>{{ char.name }}  --- {{ char.value }}</h5>
-        {% endfor %}
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <p id="modalMessage"></p>
+        </div>
     </div>
+    <div class="container product-page">
+        <div class="head">
+            <div class="link" onclick="location.href='{% url 'store:index' %}'">Главная</div>
+            <div class="arrow"><img src="{% static 'common/images/arrow_menu.svg' %}" alt=""></div>
+            <div class="link"
+                 onclick="location.href='{% url 'store:category_detail' product.category.id %}'">{{ product.category }}</div>
+            <div class="arrow"><img src="{% static 'common/images/arrow_menu.svg' %}" alt=""></div>
+            <div class="link active">{{ product }}</div>
+        </div>
+        <div class="content">
+            <div class="view">
+                <div class="img">
+                    <img src="{{ product.image.url }}" alt="">
+                </div>
+                <div class="secondary">
+                    <div class="thumbnail">
+                        <img src="{{ product.image.url }}" alt="">
+                    </div>
+                    <div class="thumbnail">
+                        <img src="{{ product.image.url }}" alt="">
+                    </div>
+                    <div class="thumbnail">
+                        <img src="{{ product.image.url }}" alt="">
+                    </div>
+                    <div class="thumbnail">
+                        <img src="{{ product.image.url }}" alt="">
+                    </div>
+                </div>
+            </div>
+            <div class="text">
+                <div class="wrapper">
+                    <div class="info">
+                        <div class="product-name">{{ product }}</div>
+                        <div class="articul">Артикул: 123456789</div>
+                        <div class="price">{{ product.price }} тг</div>
+                    </div>
+                    <div class="buttons">
+                        <div class="status na-zakaz">
+                            <div class="ico"><img src="{% static 'common/images/na-zakaz.svg' %}" alt="na-zakaz"></div>
+                            <div class="text">
+                                <b style="display: block">Товар доступен только на заказ</b>
+                                Производство занимает от 30 до 90 дней
+                            </div>
+                        </div>
+                        <form data-product-id="{{ product.id }}" method="post"
+                              action="{% url 'store:add_to_cart' product.id %}" class="add-to-cart-form">
+                            {% csrf_token %}
+                            <button class="add-cart" type="submit">
+                                Добавить в корзину
+                            </button>
+                        </form>
 
+                        <div class="bonus">
+                            Скидка 20% при заказе свыше 1000 шт
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="info">
+            <div class="side table">
+                <div class="title">Технические характеристики</div>
+                <div class="table">
+                    <div style="display: flex; gap: 1rem;">
+                        <table style="flex: 1;">
+                            <tbody>
+                            {% for char in product.characteristicvalue_set.all %}
+                                {% if forloop.counter|divisibleby:2 %}
+                                    <tr>
+                                        <td class="name">{{ char.characteristic.name }}</td>
+                                        <td class="value">{{ char.value }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <table style="flex: 1;">
+                            <tbody>
+                            {% for char in product.characteristicvalue_set.all %}
+                                {% if not forloop.counter|divisibleby:2 %}
+                                    <tr>
+                                        <td class="name">{{ char.characteristic.name }}</td>
+                                        <td class="value">{{ char.value }}</td>
+                                    </tr>
+                                {% endif %}
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="side tags">
+                <div class="tag">
+                    <div class="title">Доставка</div>
+                    <div class="list">
+                        <div class="element">
+                            <div class="ico"><img src="{% static 'common/images/samovyvoz-grey.svg' %}" alt=""></div>
+                            <div class="text">
+                                <b style="display: block">Самовывоз:</b>
+                                г.Нур-Султан, ул. Аль-Фараби 87/1 с 9:00 до 17:30
+                            </div>
+                        </div>
+                        <div class="element">
+                            <div class="ico"><img src="{% static 'common/images/dostavka-grey.svg' %}" alt=""></div>
+                            <div class="text">
+                                <b style="display: block">Доставка:</b>
+                                Межгород - от 3 до 7 дней, по городу - в течение дня
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tag">
+                    <div class="title">Оплата</div>
+                    <div class="list">
+                        <div class="element">
+                            <div class="ico"><img src="{% static 'common/images/samovyvoz-grey.svg' %}" alt=""></div>
+                            <div class="text">
+                                <b style="display: block">Безналичный расчет</b>
+                                После заключения договора
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tag">
+                    <div class="title">Гарантия</div>
+                    <div class="list">
+                        <div class="element">
+                            <div class="ico"><img src="{% static 'common/images/samovyvoz-grey.svg' %}" alt=""></div>
+                            <div class="text">
+                                Сертифицированный товар
+                                Гарантия на 12 месяцев
+                                Сервис и консультация
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        $(document).ready(function () {
+            $('.add-cart').on('click', function (event) {
+                event.preventDefault(); // Prevent default form submission
+                var productId = $(this).closest('.add-to-cart-form').data('product-id');
+                $.ajax({
+                    url: "{% url 'store:add_to_cart' 0 %}".replace(0, productId),
+                    method: 'post',
+                    data: $(this).closest('.add-to-cart-form').serialize(),
+                    success: function (data) {
+                        showModal('Ваш продукт добавлен в корзину', 1000);
+                    },
+                    error: function (error) {
+                        console.error('Ошибка при добавлении продукта:', error);
+                    }
+                });
+            });
+
+            // Function to display custom alerts using a modal
+            function showModal(message, duration) {
+                $('#modalMessage').text(message);
+                $('#myModal').css('display', 'flex');
+
+                // Set a timeout to hide the modal after the specified duration
+                setTimeout(function () {
+                    $('#myModal').css('display', 'none');
+                }, duration);
+            }
+
+            // Close the modal when the user clicks on the close button (x)
+            $('.close').on('click', function () {
+                $('#myModal').css('display', 'none');
+            });
+
+            // Close the modal if the user clicks anywhere outside of it
+            $(window).on('click', function (event) {
+                if (event.target == $('#myModal')[0]) {
+                    $('#myModal').css('display', 'none');
+                }
+            });
+        });
+    </script>
 {% endblock content %}

@@ -17,6 +17,20 @@
                     </div>
                 {% endif %}
             </div>
+            {% if errors %}
+                <div class="errors">
+                    <label>
+                        <input type="checkbox" class="alertCheckbox" autocomplete="off"/>
+                        <div class="alert error">
+                            <div class="alertText">
+                            {% for error in errors %}
+                                <div style="width: 100%;">{{ error }}</div>
+                            {% endfor %}</div>
+                        </div>
+                    </label>
+                </div>
+            {% endif %}
+
             {% if cart_items %}
                 <div class="cart-items">
                     {% for cart_item in cart_items %}
@@ -142,12 +156,12 @@
                                 </div>
                                 <div class="delivery-price field">
                                     <div class="name">Доставка</div>
-                                    <div class="value">? ??? ₸</div>
+                                    <div class="value">{{ delivery_price | price_filter}} ₸</div>
                                 </div>
                             </div>
                             <div class="total-price">
                                 <div class="name">С учетом НДС</div>
-                                <div class="value">?? ??? ??? ₸</div>
+                                <div class="value">{{ cart_items | total_price | result_price:delivery_price | price_filter}} ₸</div>
                             </div>
                         </div>
                         <div class="submit">

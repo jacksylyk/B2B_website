@@ -310,6 +310,9 @@ input.brand_check[type=checkbox]:hover ~ div.brand {
     }
 }
 
+/*ALERT_END*/
+
+
 .filter.price > .filter__body {
     display: flex;
     flex-direction: row;

@@ -7,7 +7,8 @@
     flex-direction: row;
     gap: 1.25rem;
 }
-.empty-cart{
+
+.empty-cart {
     color: var(--Text-black, #3E3E3E);
     font-size: 1.5rem;
     font-style: normal;
@@ -15,6 +16,7 @@
     line-height: normal;
     height: 25rem;
 }
+
 .cart-detail > .main {
     width: 100%;
     display: flex;
@@ -136,14 +138,14 @@
     gap: 0.5rem;
 }
 
-.price-quantity > .quantity > form{
+.price-quantity > .quantity > form {
     box-sizing: border-box;
     height: 100%;
     aspect-ratio: 1 / 1;
 }
 
 
-.price-quantity > .quantity  .btn {
+.price-quantity > .quantity .btn {
     border-radius: 0.125rem;
     background: var(--BG, #F6F6F6);
     display: flex;
@@ -153,7 +155,7 @@
     aspect-ratio: 1 / 1;
     padding: 0;
     cursor: pointer;
-    border:none;
+    border: none;
 }
 
 .price-quantity > .quantity > .btn > img {
@@ -197,7 +199,7 @@
     width: max-content;
 }
 
-.cart-item > .status-delete  .remove {
+.cart-item > .status-delete .remove {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -239,7 +241,7 @@
     flex-shrink: 0;
 }
 
-.cart-detail > .side  .delivery {
+.cart-detail > .side .delivery {
     display: flex;
     flex-direction: column;
     gap: 2rem;
@@ -248,7 +250,7 @@
     background: #FFFFFF;
 }
 
-.cart-detail > .side  .delivery > .title {
+.cart-detail > .side .delivery > .title {
     color: var(--Text-black, #3E3E3E);
     font-size: 1.5rem;
     font-style: normal;
@@ -256,13 +258,13 @@
     line-height: normal;
 }
 
-.cart-detail > .side  .delivery > .delivery_types {
+.cart-detail > .side .delivery > .delivery_types {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
 }
 
-.cart-detail > .side  .delivery > .delivery_types > .type {
+.cart-detail > .side .delivery > .delivery_types > .type {
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -299,7 +301,7 @@
     line-height: normal;
 }
 
-.cart-detail > .side  .delivery > .form {
+.cart-detail > .side .delivery > .form {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
@@ -338,7 +340,7 @@
 
 }
 
-.side  .result {
+.side .result {
     display: flex;
     flex-direction: column;
     padding: 2rem;
@@ -356,7 +358,7 @@
     line-height: normal;
 }
 
-.side  .result > .bill {
+.side .result > .bill {
 
 }
 
@@ -396,7 +398,7 @@
     flex-direction: row;
     justify-content: space-between;
     padding: 1.75rem 0;
-    border-top: dashed  #D9D9D9;
+    border-top: dashed #D9D9D9;
 }
 
 .side .result > .bill > .total-price > .name {
@@ -434,3 +436,4 @@
     font-weight: 700;
     line-height: 1.25rem;
 }
+

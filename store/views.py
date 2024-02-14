@@ -4,7 +4,7 @@ from collections import defaultdict
 from functools import reduce
 from django.db import transaction
 from django.db.models import Case, Value, When, IntegerField
-
+from django.db.models import F
 from django.db.models import Min, Max
 from django.http.response import HttpResponse, JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
@@ -14,6 +14,7 @@ from .forms import CartItemForm, ProductFilterForm
 from .models import Category, Product, Cart, CartItem, Brand, Characteristic, CharacteristicValue, Order, OrderItem
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.db.models import Case, Value, When, IntegerField
 
 
 class ProductDetailView(DetailView):
@@ -21,8 +22,6 @@ class ProductDetailView(DetailView):
     template_name = 'store/product_detail.html'
     context_object_name = 'product'
 
-
-from django.db.models import Case, Value, When, IntegerField
 
 def category_detail(request, category_id=None):
     default_category_id = 1
@@ -33,7 +32,8 @@ def category_detail(request, category_id=None):
     categories = Category.objects.all()
     brands = Brand.objects.filter(brand_product__category=category).distinct()
 
-    characteristics = CharacteristicValue.objects.filter(product__category=category).distinct()
+    characteristics = CharacteristicValue.objects.filter(product__category=category,
+                                                         characteristic__is_filter=True).distinct()
     characteristics_filter = defaultdict(list)
 
     for characteristic in characteristics:
@@ -73,7 +73,7 @@ def category_detail(request, category_id=None):
         for name, values in chars_by_name.items():
             filter_char = Characteristic.objects.get(name=name)
             products = products.filter(characteristicvalue__characteristic=filter_char,
-                                        characteristicvalue__value__in=values)
+                                       characteristicvalue__value__in=values)
 
     if brand_ids:
         products = products.filter(category=category, brand__in=brand_ids)
@@ -101,9 +101,9 @@ def category_detail(request, category_id=None):
     return render(request, 'store/home.html', context)
 
 
-
 @login_required
 def add_to_cart(request, product_id):
+    current_url = request.build_absolute_uri()
     if request.method == 'POST':
         product = Product.objects.get(pk=product_id)
         user_cart, created = Cart.objects.get_or_create(user=request.user)
@@ -114,7 +114,7 @@ def add_to_cart(request, product_id):
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             return JsonResponse({'status': 'success', 'message': 'Product added to cart'})
 
-    return redirect('store:index')
+    return redirect(request.META.get('HTTP_REFERER'))
 
 
 @login_required
@@ -131,7 +131,8 @@ def remove_from_cart(request, cart_item_id):
 def cart_detail(request, cart_id):
     cart = get_object_or_404(Cart, pk=cart_id)
     cart_items = cart.items.all().order_by('product__name')
-    return render(request, 'store/cart_detail.html', {'cart_items': cart_items, 'cart_id': cart_id})
+    error_messages = messages.get_messages(request)
+    return render(request, 'store/cart_detail.html', {'cart_items': cart_items, 'errors': error_messages, 'cart_id': cart_id, 'delivery_price': 5000})
 
 
 @login_required
@@ -167,8 +168,6 @@ def get_user_cart(user):
     return None
 
 
-from django.db.models import F
-
 @login_required
 def create_order(request):
     user_cart = get_user_cart(request.user)
@@ -178,10 +177,19 @@ def create_order(request):
         street = request.POST.get('street')
         house_number = request.POST.get('house_number')
         phone_number = request.POST.get('phone_number')
+        print(delivery_type)
+        if delivery_type == "1":
+            fields = {'Город': city, 'Улица': street, 'Дом/Офис': house_number}
+            for field_name, field_value in fields.items():
+                if not field_value:
+                    messages.error(request, f"Строка \"{field_name}\" не заполнена")
+            if any(not value for value in fields.values()):
+                return redirect('store:cart_detail', cart_id=user_cart.id)
 
         if user_cart:
             with transaction.atomic():
-                order = Order.objects.create(user=request.user, delivery=delivery_type, city=city, street=street, house_number=house_number, phone_number=phone_number)
+                order = Order.objects.create(user=request.user, delivery=delivery_type, city=city, street=street,
+                                             house_number=house_number, phone_number=phone_number)
                 for cart_item in user_cart.items.all():
                     # Reduce the quantity of ordered items from the stock
                     if cart_item.product.quantity > 0:  # Check if there is enough stock
@@ -189,14 +197,16 @@ def create_order(request):
                         cart_item.product.save()  # Save the changes to the product
                     else:
                         # Handle the case where there is not enough stock
-                        return "Sorry, you don't have enough"
-                    OrderItem.objects.create(order=order, product=cart_item.product, quantity=cart_item.quantity, price=cart_item.product.price)
+                        error_message = f'"{cart_item.product}" нет в наличии'
+                        messages.error(request, error_message)
+                        return redirect('store:cart_detail', cart_id=user_cart.id)
+                    OrderItem.objects.create(order=order, product=cart_item.product, quantity=cart_item.quantity,
+                                             price=cart_item.product.price)
                 # Clear user's cart after creating the order
                 user_cart.products.clear()
-            return render(request, 'store/cart_detail.html', {'order': order})
+            return redirect('store:cart_detail', cart_id=user_cart.id)
         else:
             return redirect('store:index')
-
 
 
 @login_required
