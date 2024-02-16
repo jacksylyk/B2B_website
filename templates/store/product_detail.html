@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% load static %}
+{% load static cart_filters %}
 {% block title %}{{ product }}{% endblock title %}
 {% block styles %}
     <link rel="stylesheet" href="{% static '/common/css/product.css' %}">
@@ -44,15 +44,20 @@
                 <div class="wrapper">
                     <div class="info">
                         <div class="product-name">{{ product }}</div>
-                        <div class="articul">Артикул: 123456789</div>
-                        <div class="price">{{ product.price }} тг</div>
+                        <div class="articul">Артикул: {{ product.articul }}</div>
+                        <div class="price">{{ product.price | price_filter }} тг</div>
                     </div>
                     <div class="buttons">
                         <div class="status na-zakaz">
                             <div class="ico"><img src="{% static 'common/images/na-zakaz.svg' %}" alt="na-zakaz"></div>
                             <div class="text">
-                                <b style="display: block">Товар доступен только на заказ</b>
-                                Производство занимает от 30 до 90 дней
+                                {% if product.quantity %}
+                                    <b>В наличии: </b>
+                                    {{ product.quantity }} шт
+                                {% else %}
+                                    <b style="display: block">Товар доступен только на заказ</b>
+                                    Производство занимает от 30 до 90 дней
+                                {% endif %}
                             </div>
                         </div>
                         <form data-product-id="{{ product.id }}" method="post"

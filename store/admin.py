@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, Characteristic, Cart, Brand, CharacteristicValue
+from .models import Category, Product, Characteristic, Cart, Brand, CharacteristicValue, Order
 
 
 class CharacteristicValueInline(admin.TabularInline):
@@ -40,3 +40,8 @@ class CharacteristicAdmin(admin.ModelAdmin):
     list_filter = ('name', 'is_filter')
     search_fields = ('name',)
     ordering = ('name',)
+
+
+@admin.register(Order)
+class OrderAdmin(admin.ModelAdmin):
+    list_display = ['id', 'created', 'updated', 'paid', 'completed', 'user']

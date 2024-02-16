@@ -1,13 +1,15 @@
 import json
 import operator
 from collections import defaultdict
+from datetime import datetime
 from functools import reduce
 from django.db import transaction
 from django.db.models import Case, Value, When, IntegerField
 from django.db.models import F
 from django.db.models import Min, Max
-from django.http.response import HttpResponse, JsonResponse
+from django.http.response import HttpResponse, JsonResponse, HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.views.generic import DetailView
 
 from .forms import CartItemForm, ProductFilterForm
@@ -177,7 +179,6 @@ def create_order(request):
         street = request.POST.get('street')
         house_number = request.POST.get('house_number')
         phone_number = request.POST.get('phone_number')
-        print(delivery_type)
         if delivery_type == "1":
             fields = {'Город': city, 'Улица': street, 'Дом/Офис': house_number}
             for field_name, field_value in fields.items():
@@ -202,7 +203,6 @@ def create_order(request):
                         return redirect('store:cart_detail', cart_id=user_cart.id)
                     OrderItem.objects.create(order=order, product=cart_item.product, quantity=cart_item.quantity,
                                              price=cart_item.product.price)
-                # Clear user's cart after creating the order
                 user_cart.products.clear()
             return redirect('store:cart_detail', cart_id=user_cart.id)
         else:
@@ -210,8 +210,35 @@ def create_order(request):
 
 
 @login_required
+def filter_orders(request):
+    if request.method == 'POST':
+        # Extracting dates from the form
+        date_range = request.POST.get('range_date').split(', ')
+        start_date_str = date_range[0]
+        end_date_str = date_range[1]
+
+        start_date = datetime.strptime(start_date_str, '%d.%m.%Y')
+        end_date = datetime.strptime(end_date_str, '%d.%m.%Y')
+
+        # Filtering orders by date range
+        orders = Order.objects.filter(user=request.user, created__range=[start_date, end_date]).order_by('-created')
+
+        # Redirecting with filtered orders as URL parameters
+        return redirect('store:my_orders', filtered_orders=orders)
+
+
+@login_required
 def my_orders(request):
     # Retrieve orders associated with the current user
     orders = Order.objects.filter(user=request.user).order_by('-created')
+    range_date = request.GET.get('range_date')  # Use request.GET instead of request.POST
+    if range_date:
+        # Split the date range and parse the start and end dates
+        start_date_str, end_date_str = range_date.split(', ')
+        start_date = datetime.strptime(start_date_str, '%d.%m.%Y')
+        end_date = datetime.strptime(end_date_str, '%d.%m.%Y')
+
+        # Filter orders within the date range
+        orders = orders.filter(created__date__gte=start_date, created__date__lte=end_date)
 
     return render(request, 'store/orders.html', {'orders': orders})

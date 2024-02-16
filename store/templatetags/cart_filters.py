@@ -1,6 +1,5 @@
 from django import template
 from django.contrib.humanize.templatetags.humanize import intcomma
-from ..models import Characteristic
 
 register = template.Library()
 
@@ -45,4 +44,15 @@ def result_price(total_price, delivery_price):
     total_price = int(total_price)
     delivery_price = int(delivery_price)
     result = (total_price + delivery_price) * 1.12
-    return result
+    return round(result, 2)
+
+
+@register.filter(name='is_completed')
+def is_completed(orders, status):
+    return orders.filter(completed=status)
+
+
+@register.filter(name='get_price')
+def get_price(order):
+    return int(order.get_total_amount())
+

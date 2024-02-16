@@ -1,6 +1,5 @@
 from django.conf import settings
 from django.db import models
-from django.urls import reverse
 from django.utils import timezone
 
 
@@ -40,6 +39,7 @@ class Product(models.Model):
     is_active = models.BooleanField(default=True)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+    articul = models.CharField(max_length=16, blank=True, verbose_name="Артикул")
 
     class Meta:
         verbose_name_plural = "Продукты"

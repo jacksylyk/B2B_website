@@ -1,15 +1,18 @@
 * {
     font-family: Open Sans;
 }
-body{
+
+body {
     padding: 0;
     margin: 0;
     background: var(--BG, #F6F6F6);
 }
-.container{
+
+.container {
     max-width: 1440px;
     margin: 0 auto;
 }
+
 a, a:visited, a:hover, a:active {
     color: inherit;
     text-decoration: none;
@@ -17,68 +20,70 @@ a, a:visited, a:hover, a:active {
 
 /*ERRORS*/
 .errors .alert {
-  position: relative;
-  left: 0;
-  width: auto;
-  height: auto;
-  padding: 10px;
-  line-height: 1.8;
-  border-radius: 5px;
-  cursor: pointer;
-  font-family: sans-serif;
-  font-weight: 400;
+    position: relative;
+    left: 0;
+    width: auto;
+    height: auto;
+    padding: 10px;
+    line-height: 1.8;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: sans-serif;
+    font-weight: 400;
 }
 
 .errors .alertCheckbox {
-  display: none;
+    display: none;
 }
 
-:checked +.alert {
-  display: none;
+:checked + .alert {
+    display: none;
 }
 
 .errors .alertText {
-  display: table;
-  padding: 1rem;
-  font-size: 16px;
+    display: table;
+    padding: 1rem;
+    font-size: 16px;
 }
 
 .errors .alertClose {
-  float: right;
-  padding-top: 5px;
-  font-size: 10px;
+    float: right;
+    padding-top: 5px;
+    font-size: 10px;
 }
 
 .errors .clear {
-  clear: both;
+    clear: both;
 }
 
 .errors .info {
-  background-color: #EEE;
-  border: 1px solid #DDD;
-  color: #999;
+    background-color: #EEE;
+    border: 1px solid #DDD;
+    color: #999;
 }
 
 .errors .success {
-  background-color: #EFE;
-  border: 1px solid #DED;
-  color: #9A9;
+    background-color: #EFE;
+    border: 1px solid #DED;
+    color: #9A9;
 }
 
 .errors .notice {
-  background-color: #EFF;
-  border: 1px solid #DEE;
-  color: #9AA;
+    background-color: #EFF;
+    border: 1px solid #DEE;
+    color: #9AA;
 }
 
 .errors .warning {
-  background-color: #FDF7DF;
-  border: 1px solid #FEEC6F;
-  color: #C9971C;
+    background-color: #FDF7DF;
+    border: 1px solid #FEEC6F;
+    color: #C9971C;
 }
 
 .errors .error {
-  background-color: #FEE;
-  border: 1px solid #EDD;
-  color: #A66;
+    background-color: #FEE;
+    border: 1px solid #EDD;
+    color: #A66;
 }
+
+/*ERRORS END*/

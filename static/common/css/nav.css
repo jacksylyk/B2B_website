@@ -18,12 +18,52 @@ nav > .container > .utils {
     gap: 1.5rem;
 }
 nav > .container > .menu{
-    gap: 2.25rem;
+
 }
+nav > .container > .menu > .element{
+    height: 100%;
+    vertical-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0 1.125rem;
+    cursor: pointer;
+}
+nav > .container > .menu > .element:hover {
+    background: #dddddd;
+}
+nav > .container > .menu > .element:active {
+    background: #c4c4c4;
+}
+
 nav > .container > .utils > .languages{
     display: flex;
     flex-direction: row;
     align-items: center;
     gap: 2rem;
     padding: 0 1.5rem;
+}
+nav > .container > .utils > .user{
+    position: relative;
+}
+nav > .container > .utils > .user > .ico > img{
+    cursor: pointer;
+}
+.user .popup {
+    display: none;
+    position: absolute;
+    top: calc( 100% + 0.5rem); /* Position 16px below the icon */
+    left: 50%; /* Center horizontally */
+    transform: translateX(-50%);
+    background-color: white;
+    border: 1px solid #ccc;
+    z-index: 9999;
+}
+.user .popup > .list_element{
+    padding: 10px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+.user .popup > .list_element:hover{
+    background: #f6f6f6;
 }

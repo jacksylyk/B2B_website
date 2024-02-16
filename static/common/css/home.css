@@ -187,11 +187,24 @@ input.brand_check[type=checkbox]:hover ~ div.brand {
     font-weight: 400;
     line-height: 1.25rem;
     padding: 0 1.5rem;
+    cursor: pointer;
 }
-
-.base > .status > .buttons > .active {
+.base > .status > .buttons > .button:hover{
+    background: #7b7b7b;
+}
+.base > .status > .buttons > .button:active{
+    background: #626262;
+}
+.base > .status > .buttons > .button.active {
     background: var(--Cuman-light-green, #7BAF21);
 }
+.base > .status > .buttons > .button.active:hover {
+    background: #628c1a;
+}
+.base > .status > .buttons > .button.active:active {
+    background: #285F38;
+}
+
 
 .base > .status > .sort {
     display: flex;

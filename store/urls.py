@@ -1,4 +1,3 @@
-from django.contrib import admin
 from django.urls import path
 
 from store import views
@@ -14,5 +13,6 @@ urlpatterns = [
     path('product/<int:pk>/', views.ProductDetailView.as_view(), name='product_detail'),
     path('clear_cart/<int:cart_id>/', views.clear_cart, name='clear_cart'),
     path('orders', views.my_orders, name='orders'),
-    path('create_order', views.create_order, name='create_order')
+    path('create_order', views.create_order, name='create_order'),
+    path('filter-orders/', views.filter_orders, name='filter_orders'),
 ]

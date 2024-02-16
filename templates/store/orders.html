@@ -1,24 +1,125 @@
 {% extends "base.html" %}
+{% load static cart_filters %}
 {% block title %}
     Мои заказы
 {% endblock title %}
-
+{% block styles %}
+    <link rel="stylesheet" href="{% static '/common/css/orders.css' %}">
+    <link href="https://cdn.jsdelivr.net/npm/air-datepicker@3.4.0/air-datepicker.min.css" rel="stylesheet">
+{% endblock styles %}
 {% block content %}
-    <div class="container">
-        <h1>Мои заказы</h1>
-        {% if orders %}
-            <ul>
-                {% for order in orders %}
-                    <li>
-                        Заказ №{{ order.id }}<br>
-                        Дата создания: {{ order.created }}<br>
-                        Статус: {% if order.paid and order.completed %}Завершен{% elif order.paid %}Оплачен{% else %}Не оплачен{% endif %}<br>
-                        <a href="#">Подробности заказа</a>
-                    </li>
+    <div class="container orders">
+        <div class="row-wrapper">
+            <div class="main">
+                <div class="head">
+                    <div class="title">Мои заказы</div>
+                    <div class="filters">
+                        <div class="button active">Все</div>
+                        <div class="button">Активные</div>
+                        <div class="button">Закрытые</div>
+                    </div>
+                </div>
+                <div class="orders">
+                    {% for order in orders|is_completed:False %}
+                        <div class="order">
+                            <div class="head">
+                                <div class="order-name">Заказ №: {{ order.id | stringformat:"05d" }} ( {{ order.created | date:"d.m.Y" }} )
+                                </div>
+                                <div class="details"><img src="{% static 'common/images/details.svg' %}" alt=""></div>
+                            </div>
+                            <div class="status">
+                                <div class="check created">
+                                    <img src="{% static 'common/images/checkbox-active.svg' %}" alt="">
+                                </div>
+                                <img src="{% static 'common/images/line-status.svg' %}" alt="">
+                                <div class="check paid">
+                                    {% if order.paid %}
+                                        <img src="{% static 'common/images/checkbox-active.svg' %}" alt="">
+                                    {% else %}
+                                        <img src="{% static 'common/images/checkbox-empty.svg' %}" alt="">
+                                    {% endif %}
+
+                                </div>
+                                <img src="{% static 'common/images/line-status.svg' %}" alt="">
+                                <div class="check completed">
+                                    {% if order.completed %}
+                                        <img src="{% static 'common/images/checkbox-active.svg' %}" alt="">
+                                    {% else %}
+                                        <img src="{% static 'common/images/checkbox-empty.svg' %}" alt="">
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="status-description">
+                                <div class="desc active" style="text-align: left">Заказ сформирован</div>
+                                <div class="desc">Оплачен</div>
+                                <div class="desc" style="text-align: end">Завершен</div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            <div class="side-filters">
+                <div class="head">
+                    <input type="text" class="search" placeholder="Поиск">
+                </div>
+                <div class="date-filter">
+                    <form action="{% url 'store:orders' %}" method="get">
+                        <div class="title">Период создания заказа</div>
+                        <div class="calendar">
+                            <input name="range_date" id="datepicker" autocomplete="off"/>
+                        </div>
+                        <div class="button">
+                            <button class="submit" type="submit">Применить</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="completed_orders">
+            <div class="title">
+                История заказов
+            </div>
+            <div class="orders_grid">
+                {% for order in orders|is_completed:True %}
+                    <div class="order">
+                        <div class="order_head">
+                            <div class="order_name">Заказ №: {{ order.id | stringformat:"05d" }}</div>
+                            <div class="stat">Выдан</div>
+                        </div>
+                        <div class="order_body">
+                            <div class="date">{{ order.created| date:"d E Y" }}</div>
+                            <div class="price">{{ order | get_price | price_filter}} тг</div>
+                        </div>
+                    </div>
                 {% endfor %}
-            </ul>
-        {% else %}
-            <p>У вас пока нет заказов.</p>
-        {% endif %}
+            </div>
+        </div>
+
     </div>
+    <script src="https://cdn.jsdelivr.net/npm/air-datepicker@3.4.0/air-datepicker.min.js"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const today = new Date();
+            const todayFormatted = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+
+            const datepicker = new AirDatepicker('#datepicker', {
+                startDate: todayFormatted,
+                range: true,
+                inline: true, // Calendar will be always visible
+                onSelect: function (formattedDate, date, inst) {
+                    if (date.length === 2) {
+                        inst.$el.val(formattedDate.join(' - '));
+                    }
+                },
+                onRenderCell: function (date, cellType) {
+                    if (cellType === 'day' && date.getDate() === 13 && date.getMonth() === 6 && date.getFullYear() === 2023) {
+                        return {
+                            disabled: true
+                        };
+                    }
+                }
+            });
+        });
+    </script>
+
 {% endblock %}

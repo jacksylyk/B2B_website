@@ -154,9 +154,9 @@
                                     <div class="name">{{ cart_items | total_quantity }} товаров на сумму</div>
                                     <div class="value">{{ cart_items | total_price | price_filter }} ₸</div>
                                 </div>
-                                <div class="delivery-price field">
+                                <div class="delivery-price field" >
                                     <div class="name">Доставка</div>
-                                    <div class="value">{{ delivery_price | price_filter}} ₸</div>
+                                    <div class="value">{% if delivery_price %}{{ delivery_price | price_filter}}{% else %}0{% endif %} ₸</div>
                                 </div>
                             </div>
                             <div class="total-price">

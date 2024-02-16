@@ -17,14 +17,18 @@
             <img src="{% static 'common/images/logo_nav.svg' %}" alt="logo navbar">
         </div>
         <div class="menu">
-            <a href="{% url 'store:index' %}">
-                <div class="element">Главная</div>
-            </a>
-            <a href="{% url 'store:orders' %}">
-                <div class="element">Мои заказы</div>
-            </a>
-            <div class="element">F.A.Q</div>
-            <div class="element">Контакты</div>
+            <div class="element" onclick="location.href='{% url 'store:index' %}';">
+                <div>Главная</div>
+            </div>
+            <div class="element" onclick="location.href='{% url 'store:orders' %}';">
+                <div>Мои заказы</div>
+            </div>
+            <div class="element">
+                <div>F.A.Q</div>
+            </div>
+            <div class="element">
+                <div>Контакты</div>
+            </div>
         </div>
         <div class="utils">
             <div class="languages">
@@ -34,17 +38,24 @@
             <div class="cart">
                 {% if user.is_authenticated %}
                     {% with user_cart=user.cart %}
-                        <a href="{% url 'store:cart_detail' cart_id=user_cart.id %}"><img src="{% static 'common/images/basket.svg' %}" alt="ico cart"></a>
+                        <a href="{% url 'store:cart_detail' cart_id=user_cart.id %}"><img
+                                src="{% static 'common/images/basket.svg' %}" alt="ico cart"></a>
                     {% endwith %}
                 {% endif %}
-                
             </div>
             <div class="user">
-                {% if user.is_authenticated %}
-                    <a href="{% url 'personal_account_detail' %}" title="{{ user }}"><img src="{% static 'common/images/user.svg' %}" alt="{{ user }}" ></a>
-                {% else %}
-                    <a href="{% url 'login' %}"><img src="{% static 'common/images/user.svg' %}" alt="ico user"></a>
-                {% endif %}
+                <div class="ico" id="userIcon">
+                    <img src="{% static 'common/images/user.svg' %}" alt="{{ user }}">
+                    <div class="popup" id="userPopup">
+                        {% if user.is_authenticated %}
+                            <div class="list_element" onclick="location.href='{% url 'personal_account_detail' %}';">Личный кабинет</div>
+                            <div class="list_element" onclick="location.href='{% url 'logout' %}';">Выйти</div>
+                        {% else %}
+                            <div class="list_element" onclick="location.href='{% url 'login' %}';">Авторизоваться</div>
+                            <div class="list_element" onclick="location.href='{% url 'register' %}';">Загеристрироваться</div>
+                        {% endif %}
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -91,5 +102,32 @@
 
     </div>
 </footer>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        var userIcon = document.getElementById("userIcon");
+        var userPopup = document.getElementById("userPopup");
+
+        userIcon.addEventListener("click", function (event) {
+            // Prevent default link behavior
+            event.preventDefault();
+            event.stopPropagation();
+
+            // Toggle visibility of the popup
+            if (userPopup.style.display === "block") {
+                userPopup.style.display = "none";
+            } else {
+                userPopup.style.display = "block";
+            }
+        });
+
+        // Close the popup if user clicks outside of it
+        document.addEventListener("click", function (event) {
+            if (!userIcon.contains(event.target) && !userPopup.contains(event.target)) {
+                userPopup.style.display = "none";
+            }
+        });
+    });
+
+</script>
 </body>
 </html>
