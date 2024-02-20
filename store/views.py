@@ -134,7 +134,8 @@ def cart_detail(request, cart_id):
     cart = get_object_or_404(Cart, pk=cart_id)
     cart_items = cart.items.all().order_by('product__name')
     error_messages = messages.get_messages(request)
-    return render(request, 'store/cart_detail.html', {'cart_items': cart_items, 'errors': error_messages, 'cart_id': cart_id, 'delivery_price': 5000})
+    return render(request, 'store/cart_detail.html',
+                  {'cart_items': cart_items, 'errors': error_messages, 'cart_id': cart_id, 'delivery_price': 5000})
 
 
 @login_required
@@ -150,6 +151,14 @@ def update_cart(request, item_id):
                     quantity += 1
                 elif request.POST['action'] == 'decrement':
                     quantity -= 1 if quantity > 1 else 0
+                elif request.POST['action'] == 'update':
+                    update_quantity = request.POST.get('quantity')
+                    try:
+                        update_quantity = int(update_quantity)
+                        if update_quantity >= 0:
+                            quantity = update_quantity
+                    except ValueError:
+                        pass
 
             cart_item.quantity = quantity
             cart_item.save()
@@ -234,11 +243,16 @@ def my_orders(request):
     range_date = request.GET.get('range_date')  # Use request.GET instead of request.POST
     if range_date:
         # Split the date range and parse the start and end dates
-        start_date_str, end_date_str = range_date.split(', ')
-        start_date = datetime.strptime(start_date_str, '%d.%m.%Y')
-        end_date = datetime.strptime(end_date_str, '%d.%m.%Y')
+        try:
+            start_date_str, end_date_str = range_date.split(', ')
+            start_date = datetime.strptime(start_date_str, '%d.%m.%Y')
+            end_date = datetime.strptime(end_date_str, '%d.%m.%Y')
+            orders = orders.filter(created__date__gte=start_date, created__date__lte=end_date)
+        except ValueError:
+            single_date_str = range_date
+            single_date = datetime.strptime(single_date_str, '%d.%m.%Y')
+            orders = orders.filter(created__date=single_date)
 
-        # Filter orders within the date range
-        orders = orders.filter(created__date__gte=start_date, created__date__lte=end_date)
+    print(orders)
 
     return render(request, 'store/orders.html', {'orders': orders})

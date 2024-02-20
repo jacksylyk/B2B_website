@@ -21,7 +21,7 @@ def multiply(value, arg):
 
 @register.filter(name='price_filter')
 def price_filter(price):
-    return intcomma(price).replace(',', ' ')
+    return intcomma(int(price)).replace(',', ' ')
 
 
 @register.filter(name='get_list')

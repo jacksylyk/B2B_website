@@ -174,7 +174,7 @@
     width: 100%;
 }
 
-.quantity__count > .count {
+.quantity__count  .count {
     color: var(--Text-black, #3E3E3E);
     text-align: center;
     font-size: 0.875rem;
@@ -183,9 +183,32 @@
     line-height: normal;
     display: flex;
     width: 3.75rem;
-    height: 1rem;
+    height: 100%;
     flex-direction: column;
     justify-content: center;
+    background: inherit;
+    border: none;
+}
+
+.quantity__count form{
+    position: relative;
+}
+.quantity__count form > .button-block{
+    position: absolute;
+    top: calc(100% + 10px);
+    left: -10px;
+    background: white;
+    border-radius: 0.25rem;
+    padding: 10px;
+    border: 1px solid #ccc;
+}
+.quantity__count form > .button-block > button{
+    border-radius: 0.25rem;
+    background: rgb(40, 95, 56);
+    color: white;
+    border: none;
+    padding: 0.5rem;
+    cursor: pointer;
 }
 
 .cart-items > .cart-item > .status-delete {

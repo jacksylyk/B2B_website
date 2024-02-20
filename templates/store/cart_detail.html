@@ -3,6 +3,7 @@
 {% block styles %}
     <link rel="stylesheet" href="{% static '/common/css/cart_detail.css' %}">
     <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+    <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
 {% endblock styles %}
 {% block title %}
     Корзина
@@ -23,9 +24,9 @@
                         <input type="checkbox" class="alertCheckbox" autocomplete="off"/>
                         <div class="alert error">
                             <div class="alertText">
-                            {% for error in errors %}
-                                <div style="width: 100%;">{{ error }}</div>
-                            {% endfor %}</div>
+                                {% for error in errors %}
+                                    <div style="width: 100%;">{{ error }}</div>
+                                {% endfor %}</div>
                         </div>
                     </label>
                 </div>
@@ -57,7 +58,17 @@
                                                         alt="minus"></button>
                                             </form>
                                             <div class="quantity__count">
-                                                <div class="count">{{ cart_item.quantity }} шт</div>
+                                                <form id="update-quantity-form-{{ cart_item.id }}" method="post"
+                                                      action="{% url 'store:update_cart' cart_item.id %}">
+                                                    {% csrf_token %}
+                                                    <input id="quantity-input-{{ cart_item.id }}" class="count"
+                                                           name="quantity" type="number"
+                                                           value="{{ cart_item.quantity }}">
+                                                    <div class="button-block" style="display: none">
+                                                        <button type="submit" name="action" value="update">Применить
+                                                        </button>
+                                                    </div>
+                                                </form>
                                             </div>
                                             <form method="post" action="{% url 'store:update_cart' cart_item.id %}">
                                                 {% csrf_token %}
@@ -69,8 +80,6 @@
                                                         alt="plus">
                                                 </button>
                                             </form>
-
-
                                         </div>
                                     </div>
                                 </div>
@@ -154,14 +163,19 @@
                                     <div class="name">{{ cart_items | total_quantity }} товаров на сумму</div>
                                     <div class="value">{{ cart_items | total_price | price_filter }} ₸</div>
                                 </div>
-                                <div class="delivery-price field" >
+                                <div class="delivery-price field">
                                     <div class="name">Доставка</div>
-                                    <div class="value">{% if delivery_price %}{{ delivery_price | price_filter}}{% else %}0{% endif %} ₸</div>
+                                    <div class="value">
+                                        {% if delivery_price %}{{ delivery_price | price_filter }}{% else %}0{% endif %}
+                                        ₸
+                                    </div>
                                 </div>
                             </div>
                             <div class="total-price">
                                 <div class="name">С учетом НДС</div>
-                                <div class="value">{{ cart_items | total_price | result_price:delivery_price | price_filter}} ₸</div>
+                                <div class="value">{{ cart_items | total_price | result_price:delivery_price | price_filter }}
+                                    ₸
+                                </div>
                             </div>
                         </div>
                         <div class="submit">
@@ -187,6 +201,27 @@
 
             deliveryInputs.forEach(function (input) {
                 input.addEventListener('change', toggleForm);
+            });
+        });
+    </script>
+    <script>
+        // Получаем все элементы форм с классом "quantity__count"
+        const quantityForms = document.querySelectorAll('.quantity__count');
+
+        // Перебираем каждую форму
+        quantityForms.forEach(form => {
+            // Находим в каждой форме элементы ввода количества и кнопку "Применить"
+            const quantityInput = form.querySelector('.count');
+            const buttonBlock = form.querySelector('.button-block');
+
+            // Добавляем обработчик события изменения значения в поле ввода
+            quantityInput.addEventListener('change', () => {
+                // Проверяем, если значение в поле ввода больше 0, показываем блок кнопки, иначе скрываем его
+                if (parseInt(quantityInput.value) > 0) {
+                    buttonBlock.style.display = 'block';
+                } else {
+                    buttonBlock.style.display = 'none';
+                }
             });
         });
     </script>
